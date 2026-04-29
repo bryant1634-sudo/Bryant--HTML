@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subpoena Manager ROI Calculator | Exterro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange:       #F26C38;
+  --orange-dark:  #D4561F;
+  --orange-glow:  rgba(242,108,56,0.15);
+  --charcoal:     #323132;
+  --purple:       #4B2D6E;
+  --purple-dark:  #3A2155;
+  --purple-mid:   #5C3A85;
+  --white:        #FFFFFF;
+  --off-white:    #F7F6F9;
+  --light-gray:   #F1F1F2;
+  --border:       #E2DFF0;
+  --silver:       #6D6E70;
+  --blue:         #64ADC6;
+  --green:        #27AE60;
+  --green-light:  #E8F5EE;
+  --red:          #E74C3C;
+  --red-light:    #FAEAEA;
+  --card-bg:      #FFFFFF;
+  --page-bg:      #F4F3F7;
+
+  --radius-sm:    6px;
+  --radius-md:    12px;
+  --radius-lg:    20px;
+  --shadow-sm:    0 2px 8px rgba(50,49,50,0.08);
+  --shadow-md:    0 6px 24px rgba(50,49,50,0.10);
+  --shadow-lg:    0 16px 48px rgba(50,49,50,0.14);
+  --transition:   0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--page-bg);
+  color: var(--charcoal);
+  min-height: 100vh;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ──────────────────────────────────────────────────────────────── */
+.site-header {
+  background: var(--purple-dark);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+}
+
+.logo {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.3px;
+}
+.logo .x { color: var(--orange); }
+.logo sup { font-size: 9px; vertical-align: super; }
+
+.header-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+
+/* ── HERO ─────────────────────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 55%, #5C3A85 100%);
+  padding: 64px 40px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  right: -120px; top: -120px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(242,108,56,0.12) 0%, transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  left: -80px; bottom: -80px;
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, rgba(100,173,198,0.10) 0%, transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  background: var(--orange);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 52px);
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  position: relative;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--orange);
+}
+
+.hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.72);
+  max-width: 560px;
+  margin: 0 auto 32px;
+  line-height: 1.65;
+}
+
+/* ── HERO PROOF STRIP ─────────────────────────────────────────────────────── */
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  max-width: 680px;
+  margin: 0 auto;
+  position: relative;
+}
+.hero-stat {
+  flex: 1;
+  padding: 18px 20px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  transition: background var(--transition);
+}
+.hero-stat:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.hero-stat:last-child  { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.hero-stat + .hero-stat { border-left: none; }
+
+.hs-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 30px;
+  color: var(--orange);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hs-lbl {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+/* ── MAIN LAYOUT ──────────────────────────────────────────────────────────── */
+.main-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 28px 80px;
+}
+
+.calc-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ── CARDS ────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 22px 28px 0;
+}
+.card-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  color: var(--charcoal);
+  margin-bottom: 4px;
+}
+.card-header p {
+  font-size: 13px;
+  color: var(--silver);
+  margin-bottom: 0;
+}
+
+.card-body { padding: 22px 28px 28px; }
+
+/* ── SECTION LABELS ───────────────────────────────────────────────────────── */
+.section-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── INPUT GROUPS ─────────────────────────────────────────────────────────── */
+.input-group {
+  margin-bottom: 22px;
+}
+.input-group:last-child { margin-bottom: 0; }
+
+.input-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.input-label .hint {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--silver);
+}
+
+/* Slider wrapper */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slider-wrap {
+  flex: 1;
+  position: relative;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 10px;
+  background: var(--light-gray);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 3px solid var(--white);
+  box-shadow: 0 2px 8px rgba(242,108,56,0.4);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 3px 14px rgba(242,108,56,0.55);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 3px solid var(--white);
+  box-shadow: 0 2px 8px rgba(242,108,56,0.4);
+  cursor: pointer;
+}
+
+.range-fill-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+  border-radius: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: width 0.1s;
+}
+
+.slider-value {
+  min-width: 64px;
+  text-align: right;
+}
+.slider-value input[type="number"] {
+  width: 70px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--charcoal);
+  background: var(--off-white);
+  text-align: right;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.slider-value input[type="number"]:focus {
+  border-color: var(--orange);
+  background: #fff;
+}
+.slider-value input[type="number"]::-webkit-inner-spin-button,
+.slider-value input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* ── DIVIDER ─────────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 22px 0;
+}
+
+/* ── ASSUMPTION TOGGLES ──────────────────────────────────────────────────── */
+.assumptions-section {
+  margin-top: 22px;
+}
+.assumptions-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--purple);
+  user-select: none;
+  margin-bottom: 14px;
+  transition: color var(--transition);
+}
+.assumptions-toggle:hover { color: var(--orange); }
+.toggle-chevron {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.assumptions-toggle.open .toggle-chevron { transform: rotate(180deg); }
+.assumptions-body {
+  display: none;
+}
+.assumptions-body.open { display: block; }
+
+/* ── RESULTS PANEL ────────────────────────────────────────────────────────── */
+.results-card {
+  position: sticky;
+  top: 76px;
+}
+
+.results-hero {
+  background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+  padding: 28px 28px 24px;
+  color: var(--white);
+}
+.results-hero .rh-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 6px;
+}
+.results-hero .rh-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+/* Annual savings big number */
+.annual-savings-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 16px;
+}
+.savings-currency {
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+}
+.savings-amount {
+  font-family: 'DM Serif Display', serif;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--orange);
+  letter-spacing: -2px;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.savings-suffix {
+  font-size: 22px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+}
+
+.savings-sublabel {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+}
+
+/* Metric grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.metric-cell {
+  background: var(--white);
+  padding: 18px 20px;
+  transition: background var(--transition);
+}
+.metric-cell:hover { background: var(--off-white); }
+.metric-cell .mc-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  color: var(--purple);
+  line-height: 1;
+  margin-bottom: 4px;
+  transition: all 0.35s ease;
+}
+.metric-cell .mc-val.highlight { color: var(--orange); }
+.metric-cell .mc-val.green { color: var(--green); }
+.metric-cell .mc-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--silver);
+  line-height: 1.4;
+}
+
+/* Time value breakdown */
+.breakdown-list {
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+.breakdown-item:last-child { border-bottom: none; }
+.bi-label {
+  color: var(--silver);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.bi-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.bi-val {
+  font-weight: 700;
+  color: var(--charcoal);
+  white-space: nowrap;
+}
+.bi-val.before { color: var(--red); }
+.bi-val.after  { color: var(--green); }
+
+/* Payback strip */
+.payback-strip {
+  padding: 16px 28px;
+  background: var(--green-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #C3E6D0;
+}
+.ps-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+}
+.ps-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* ── ROI PROGRESS BAR ────────────────────────────────────────────────────── */
+.roi-bar-section {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+}
+.roi-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--silver);
+  margin-bottom: 8px;
+}
+.roi-bar-track {
+  height: 10px;
+  background: var(--light-gray);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.roi-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--purple));
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.roi-pct-label {
+  text-align: right;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--orange);
+  margin-top: 5px;
+}
+
+/* ── CTA STRIP ───────────────────────────────────────────────────────────── */
+.cta-strip {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+  width: 100%;
+}
+.cta-primary {
+  background: var(--orange);
+  color: var(--white);
+  box-shadow: 0 4px 16px rgba(242,108,56,0.35);
+}
+.cta-primary:hover {
+  background: var(--orange-dark);
+  box-shadow: 0 6px 22px rgba(242,108,56,0.45);
+  transform: translateY(-1px);
+}
+.cta-secondary {
+  background: transparent;
+  color: var(--purple);
+  border: 1.5px solid var(--purple);
+}
+.cta-secondary:hover {
+  background: var(--purple);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* ── SCENARIO PANEL ──────────────────────────────────────────────────────── */
+.scenario-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 20px 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+.scenario-tab {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-bottom: none;
+  color: var(--silver);
+  background: transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.scenario-tab.active {
+  background: var(--white);
+  color: var(--purple);
+  border-color: var(--border);
+  border-bottom-color: var(--white);
+  margin-bottom: -1px;
+}
+.scenario-tab:not(.active):hover { color: var(--charcoal); }
+
+/* ── BOTTOM FULL-WIDTH SECTION ───────────────────────────────────────────── */
+.full-section {
+  margin-top: 28px;
+}
+.section-hdr {
+  margin-bottom: 20px;
+}
+.section-hdr h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  color: var(--charcoal);
+  margin-bottom: 4px;
+}
+.section-hdr p { font-size: 13px; color: var(--silver); }
+
+/* ── VALUE TIMELINE ──────────────────────────────────────────────────────── */
+.timeline-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.timeline-header {
+  background: var(--purple-dark);
+  padding: 20px 28px;
+  color: var(--white);
+}
+.timeline-header h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.timeline-header p { font-size: 13px; color: rgba(255,255,255,0.6); }
+
+.timeline-body { padding: 28px; }
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+.timeline-grid::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), var(--purple));
+  z-index: 0;
+}
+
+.tl-item {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 12px;
+}
+.tl-node {
+  width: 22px;
+  height: 22px;
+  background: var(--orange);
+  border: 3px solid var(--white);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--orange-glow);
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tl-node.purple-node { background: var(--purple); box-shadow: 0 0 0 3px rgba(75,45,110,0.15); }
+.tl-node svg { width: 10px; height: 10px; fill: var(--white); }
+.tl-month {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 6px;
+}
+.tl-month.purple-label { color: var(--purple); }
+.tl-head {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.tl-body {
+  font-size: 11.5px;
+  color: var(--silver);
+  line-height: 1.55;
+}
+
+/* ── COMPARISON TABLE ────────────────────────────────────────────────────── */
+.compare-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  margin-top: 28px;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.compare-table thead {
+  background: var(--purple-dark);
+  color: var(--white);
+}
+.compare-table th {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.compare-table th:nth-child(2) { text-align: center; }
+.compare-table th:nth-child(3) { text-align: center; }
+.compare-table th:last-child { text-align: center; background: rgba(242,108,56,0.15); }
+
+.compare-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--light-gray);
+  color: var(--charcoal);
+  vertical-align: middle;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--off-white); }
+.compare-table td:first-child { font-weight: 600; }
+.compare-table td:nth-child(2) { text-align: center; color: var(--red); font-weight: 600; }
+.compare-table td:nth-child(3) { text-align: center; color: var(--green); font-weight: 600; }
+.compare-table td:last-child { text-align: center; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+.badge-red    { background: var(--red-light);   color: var(--red); }
+.badge-green  { background: var(--green-light); color: var(--green); }
+
+/* ── PRINT BANNER ────────────────────────────────────────────────────────── */
+.print-bar {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1.5px dashed var(--border);
+  padding: 24px 32px;
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.print-bar p {
+  font-size: 14px;
+  color: var(--silver);
+}
+.print-bar strong { color: var(--charcoal); }
+
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.print-btn:hover {
+  background: var(--purple-dark);
+  transform: translateY(-1px);
+}
+
+/* ── DISCLAIMER ──────────────────────────────────────────────────────────── */
+.disclaimer {
+  font-size: 11px;
+  color: var(--silver);
+  text-align: center;
+  margin-top: 28px;
+  line-height: 1.6;
+  padding: 0 20px;
+}
+
+/* ── ANIMATIONS ──────────────────────────────────────────────────────────── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.number-flash {
+  animation: countUp 0.3s ease both;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .calc-layout { grid-template-columns: 1fr; }
+  .results-card { position: static; }
+  .timeline-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .timeline-grid::before { display: none; }
+  .hero { padding: 48px 20px 56px; }
+  .main-wrap { padding: 32px 16px 60px; }
+  .site-header { padding: 0 20px; }
+  .print-bar { flex-direction: column; align-items: flex-start; }
+}
+
+@media print {
+  .site-header, .cta-strip, .print-bar, .hero-eyebrow,
+  .cta-btn { display: none !important; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+  body { background: white; }
+  .results-card { position: static; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">e<span class="x">x</span>terro<sup>®</sup></div>
+  <div class="header-badge">Subpoena Manager · ROI Calculator</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">ROI Calculator</div>
+  <h1>What Is Your Subpoena Process<br><em>Actually Costing You?</em></h1>
+  <p>Enter your organization's numbers below. See your time savings, cost recovery, and return on investment in real time.</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hs-val">90 min</div>
+      <div class="hs-lbl">Average manual<br>intake per subpoena</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hs-val">5 min</div>
+      <div class="hs-lbl">Target with<br>Subpoena Manager</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hs-val">~1 wk</div>
+      <div class="hs-lbl">Work week recovered<br>per month at 20/mo</div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="main-wrap">
+  <div class="calc-layout">
+
+    <!-- ── LEFT: INPUTS ─────────────────────────────────────────────────── -->
+    <div>
+      <div class="card">
+        <div class="scenario-tabs">
+          <button class="scenario-tab active" onclick="loadScenario('custom', this)">Custom</button>
+          <button class="scenario-tab" onclick="loadScenario('small', this)">Small Team</button>
+          <button class="scenario-tab" onclick="loadScenario('medium', this)">Mid-Market</button>
+          <button class="scenario-tab" onclick="loadScenario('enterprise', this)">Enterprise</button>
+        </div>
+
+        <div class="card-header" style="padding-top:20px">
+          <h2>Your Organization's Numbers</h2>
+          <p>Adjust each slider to match your current state</p>
+        </div>
+        <div class="card-body">
+
+          <!-- VOLUME & TIME -->
+          <div class="section-label">Volume &amp; Current Process</div>
+
+          <div class="input-group">
+            <div class="input-label">
+              Subpoenas per month
+              <span class="hint">Typical range: 5–200+</span>
+            </div>
+            <div class="slider-row">
+              <div class="slider-wrap">
+                <div class="range-fill-track" id="track-volume"></div>
+                <input type="range" id="sl-volume" min="1" max="200" value="20" oninput="sync('volume')">
+              </div>
+              <div class="slider-value">
+                <input type="number" id="nv-volume" value="20" min="1" max="500" oninput="syncNum('volume')">
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-label">
+              Current intake time per subpoena (minutes)
+              <span class="hint">Industry avg: 60–90 min</span>
+            </div>
+            <div class="slider-row">
+              <div class="slider-wrap">
+                <div class="range-fill-track" id="track-intakeTime"></div>
+                <input type="range" id="sl-intakeTime" min="15" max="180" value="90" oninput="sync('intakeTime')">
+              </div>
+              <div class="slider-value">
+                <input type="number" id="nv-intakeTime" value="90" min="5" max="300" oninput="syncNum('intakeTime')">
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- STAFF COSTS -->
+          <div class="section-label">Staff &amp; Cost</div>
+
+          <div class="input-group">
+            <div class="input-label">
+              Paralegal/Coordinator hourly rate (fully loaded)
+              <span class="hint">$/hr</span>
+            </div>
+            <div class="slider-row">
+              <div class="slider-wrap">
+                <div class="range-fill-track" id="track-paraRate"></div>
+                <input type="range" id="sl-paraRate" min="30" max="200" value="75" oninput="sync('paraRate')">
+              </div>
+              <div class="slider-value">
+                <input type="number" id="nv-paraRate" value="75" min="10" max="500" oninput="syncNum('paraRate')">
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-label">
+              Attorney/Counsel hourly rate (fully loaded)
+              <span class="hint">$/hr</span>
+            </div>
+            <div class="slider-row">
+              <div class="slider-wrap">
+                <div class="range-fill-track" id="track-attyRate"></div>
+                <input type="range" id="sl-attyRate" min="100" max="800" value="300" oninput="sync('attyRate')">
+              </div>
+              <div class="slider-value">
+                <input type="number" id="nv-attyRate" value="300" min="50" max="1500" oninput="syncNum('attyRate')">
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-label">
+              % of intake handled by attorneys
+              <span class="hint">Review, triage oversight</span>
+            </div>
+            <div class="slider-row">
+              <div class="slider-wrap">
+                <div class="range-fill-track" id="track-attyPct"></div>
+                <input type="range" id="sl-attyPct" min="0" max="80" value="20" oninput="sync('attyPct')">
+              </div>
+              <div class="slider-value">
+                <input type="number" id="nv-attyPct" value="20" min="0" max="100" oninput="syncNum('attyPct')">
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ADVANCED ASSUMPTIONS -->
+          <div class="assumptions-section">
+            <div class="assumptions-toggle" id="assump-toggle" onclick="toggleAssumptions()">
+              <div class="toggle-chevron">▾</div>
+              Advanced assumptions
+            </div>
+            <div class="assumptions-body" id="assump-body">
+
+              <div class="input-group">
+                <div class="input-label">
+                  Target intake time with Subpoena Manager (minutes)
+                  <span class="hint">Default: 5 min</span>
+                </div>
+                <div class="slider-row">
+                  <div class="slider-wrap">
+                    <div class="range-fill-track" id="track-targetTime"></div>
+                    <input type="range" id="sl-targetTime" min="1" max="30" value="5" oninput="sync('targetTime')">
+                  </div>
+                  <div class="slider-value">
+                    <input type="number" id="nv-targetTime" value="5" min="1" max="60" oninput="syncNum('targetTime')">
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="input-label">
+                  Avg. follow-up chasers per subpoena
+                  <span class="hint">HR, Claims, Compliance, etc.</span>
+                </div>
+                <div class="slider-row">
+                  <div class="slider-wrap">
+                    <div class="range-fill-track" id="track-chasers"></div>
+                    <input type="range" id="sl-chasers" min="0" max="10" value="3" oninput="sync('chasers')">
+                  </div>
+                  <div class="slider-value">
+                    <input type="number" id="nv-chasers" value="3" min="0" max="20" oninput="syncNum('chasers')">
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="input-label">
+                  Minutes per follow-up reminder
+                  <span class="hint">Email, call, re-send</span>
+                </div>
+                <div class="slider-row">
+                  <div class="slider-wrap">
+                    <div class="range-fill-track" id="track-chaserMin"></div>
+                    <input type="range" id="sl-chaserMin" min="2" max="30" value="10" oninput="sync('chaserMin')">
+                  </div>
+                  <div class="slider-value">
+                    <input type="number" id="nv-chaserMin" value="10" min="1" max="60" oninput="syncNum('chaserMin')">
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <div class="input-label">
+                  Estimated annual solution cost ($)
+                  <span class="hint">For payback calculation</span>
+                </div>
+                <div class="slider-row">
+                  <div class="slider-wrap">
+                    <div class="range-fill-track" id="track-solutionCost"></div>
+                    <input type="range" id="sl-solutionCost" min="5000" max="200000" value="40000" step="1000" oninput="sync('solutionCost')">
+                  </div>
+                  <div class="slider-value">
+                    <input type="number" id="nv-solutionCost" value="40000" min="0" max="500000" oninput="syncNum('solutionCost')">
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /assump-body -->
+          </div><!-- /assumptions-section -->
+
+        </div><!-- /card-body -->
+      </div><!-- /card -->
+    </div><!-- /left col -->
+
+    <!-- ── RIGHT: RESULTS ───────────────────────────────────────────────── -->
+    <div>
+      <div class="card results-card">
+
+        <!-- Annual savings hero -->
+        <div class="results-hero">
+          <div class="rh-label">Estimated Annual Savings</div>
+          <div class="rh-title">Your ROI with Subpoena Manager</div>
+          <div class="annual-savings-wrap">
+            <span class="savings-currency">$</span>
+            <span class="savings-amount" id="r-annual-savings">0</span>
+            <span class="savings-suffix">/yr</span>
+          </div>
+          <div class="savings-sublabel" id="r-sublabel">Enter your numbers to calculate</div>
+        </div>
+
+        <!-- Key metrics grid -->
+        <div class="metrics-grid">
+          <div class="metric-cell">
+            <div class="mc-val highlight" id="r-hrs-monthly">0 hrs</div>
+            <div class="mc-lbl">Hours recovered<br>per month</div>
+          </div>
+          <div class="metric-cell">
+            <div class="mc-val highlight" id="r-weeks-monthly">0 wks</div>
+            <div class="mc-lbl">Work weeks freed<br>per month</div>
+          </div>
+          <div class="metric-cell">
+            <div class="mc-val green" id="r-monthly-savings">$0</div>
+            <div class="mc-lbl">Monthly cost<br>savings</div>
+          </div>
+          <div class="metric-cell">
+            <div class="mc-val" id="r-payback">—</div>
+            <div class="mc-lbl">Estimated<br>payback period</div>
+          </div>
+        </div>
+
+        <!-- ROI bar -->
+        <div class="roi-bar-section">
+          <div class="roi-bar-label">
+            <span>Cost of current process</span>
+            <span>Value delivered by solution</span>
+          </div>
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" id="r-roi-bar" style="width:0%"></div>
+          </div>
+          <div class="roi-pct-label" id="r-roi-pct">Enter inputs above</div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="breakdown-list">
+          <div class="breakdown-item">
+            <span class="bi-label">
+              <span class="bi-dot" style="background:var(--red)"></span>
+              Monthly intake time (before)
+            </span>
+            <span class="bi-val before" id="r-b-intake-time">— hrs</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="bi-label">
+              <span class="bi-dot" style="background:var(--green)"></span>
+              Monthly intake time (after)
+            </span>
+            <span class="bi-val after" id="r-a-intake-time">— hrs</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="bi-label">
+              <span class="bi-dot" style="background:var(--orange)"></span>
+              Follow-up chasing time saved
+            </span>
+            <span class="bi-val" id="r-chaser-time">— hrs</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="bi-label">
+              <span class="bi-dot" style="background:var(--blue)"></span>
+              Attorney time redirected
+            </span>
+            <span class="bi-val" id="r-atty-time">— hrs</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="bi-label">
+              <span class="bi-dot" style="background:var(--purple)"></span>
+              Annual process cost (current)
+            </span>
+            <span class="bi-val before" id="r-total-cost">$—</span>
+          </div>
+        </div>
+
+        <!-- Payback strip -->
+        <div class="payback-strip" id="payback-strip" style="display:none">
+          <span class="ps-label">💰 Estimated payback period</span>
+          <span class="ps-val" id="r-payback-strip">—</span>
+        </div>
+
+        <!-- CTAs -->
+        <div class="cta-strip">
+          <button class="cta-btn cta-primary" onclick="window.open('https://www.exterro.com/demo','_blank')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+            Schedule a Live Demo
+          </button>
+          <button class="cta-btn cta-secondary" onclick="window.print()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Save / Print Report
+          </button>
+        </div>
+
+      </div><!-- /results-card -->
+    </div><!-- /right col -->
+  </div><!-- /calc-layout -->
+
+  <!-- ── VALUE TIMELINE ───────────────────────────────────────────────────── -->
+  <div class="full-section">
+    <div class="section-hdr">
+      <h2>Value Timeline</h2>
+      <p>What to expect from implementation through steady-state value delivery</p>
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-header">
+        <h3>From Day One to Full ROI</h3>
+        <p>Subpoena Manager delivers measurable value within the first 30 days</p>
+      </div>
+      <div class="timeline-body">
+        <div class="timeline-grid">
+          <div class="tl-item">
+            <div class="tl-node">
+              <svg viewBox="0 0 10 10"><polygon points="4 2 4 8 8 5"/></svg>
+            </div>
+            <div class="tl-month">Day 1–30</div>
+            <div class="tl-head">Intake automation live</div>
+            <div class="tl-body">Subpoenas captured automatically. Manual data entry eliminated. First measurable time savings begin immediately.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-node">
+              <svg viewBox="0 0 10 10"><rect x="2" y="2" width="6" height="6"/></svg>
+            </div>
+            <div class="tl-month">Month 1–3</div>
+            <div class="tl-head">Routing & follow-up governed</div>
+            <div class="tl-body">Consistent routing rules in place. Automated follow-up with HR, Claims, and Compliance replaces manual chasing.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-node purple-node">
+              <svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="3"/></svg>
+            </div>
+            <div class="tl-month purple-label">Month 3–6</div>
+            <div class="tl-head">Visibility & reporting</div>
+            <div class="tl-body">Leadership dashboard active. Real-time workload, bottlenecks, and turnaround time visible without manual compilation.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-node purple-node">
+              <svg viewBox="0 0 10 10"><polygon points="5 1 9 9 1 9"/></svg>
+            </div>
+            <div class="tl-month purple-label">Month 6+</div>
+            <div class="tl-head">Full ROI &amp; audit trail</div>
+            <div class="tl-body">Complete defensible audit trail established. Process scales with volume. Full cost recovery delivered.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CURRENT vs SOLUTION COMPARISON ──────────────────────────────────── -->
+  <div class="compare-card">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:38%">Process Area</th>
+          <th style="width:24%">Current State</th>
+          <th style="width:24%">With Subpoena Manager</th>
+          <th style="width:14%">Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Intake trigger</td>
+          <td>Manual — someone reads &amp; routes each subpoena</td>
+          <td>Automatic — captured from all channels instantly</td>
+          <td><span class="badge badge-green">Time savings</span></td>
+        </tr>
+        <tr>
+          <td>Data entry</td>
+          <td>1–1.5 hrs/subpoena re-entered across systems</td>
+          <td>AI extracts details; structured record auto-created</td>
+          <td><span class="badge badge-green">Cost savings</span></td>
+        </tr>
+        <tr>
+          <td>Routing &amp; ownership</td>
+          <td>Ad hoc — whoever sees the email first</td>
+          <td>Consistent routing with confirmed ownership</td>
+          <td><span class="badge badge-green">Risk reduction</span></td>
+        </tr>
+        <tr>
+          <td>Cross-dept follow-up</td>
+          <td>Manual reminders, personal effort, frequent misses</td>
+          <td>Automated notifications triggered by workflow</td>
+          <td><span class="badge badge-green">Time savings</span></td>
+        </tr>
+        <tr>
+          <td>Deadline visibility</td>
+          <td>Spreadsheets and calendar entries</td>
+          <td>Real-time dashboard with deadline alerts</td>
+          <td><span class="badge badge-red">Risk removed</span></td>
+        </tr>
+        <tr>
+          <td>Audit trail</td>
+          <td>Reconstructed after-the-fact from email</td>
+          <td>Complete defensible record from first capture</td>
+          <td><span class="badge badge-red">Risk removed</span></td>
+        </tr>
+        <tr>
+          <td>Scalability</td>
+          <td>Volume increases require proportional headcount</td>
+          <td>Handles volume growth without adding staff</td>
+          <td><span class="badge badge-green">Cost savings</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    Calculations are estimates based on industry benchmarks and user-provided inputs. Actual results may vary depending on organization size, subpoena complexity, workflow maturity, and implementation approach. This calculator is intended for planning and evaluation purposes only.
+    <br>Exterro® — <a href="https://www.exterro.com" style="color:var(--orange)">exterro.com</a>
+  </div>
+
+</main>
+
+<script>
+/* ── STATE ─────────────────────────────────────────────────────────────────── */
+const state = {
+  volume:       20,
+  intakeTime:   90,
+  paraRate:     75,
+  attyRate:     300,
+  attyPct:      20,
+  targetTime:   5,
+  chasers:      3,
+  chaserMin:    10,
+  solutionCost: 40000,
+};
+
+/* ── SCENARIOS ─────────────────────────────────────────────────────────────── */
+const scenarios = {
+  small:      { volume:8,   intakeTime:75,  paraRate:60,  attyRate:250, attyPct:15, targetTime:5, chasers:2, chaserMin:8,  solutionCost:20000 },
+  medium:     { volume:25,  intakeTime:90,  paraRate:80,  attyRate:320, attyPct:20, targetTime:5, chasers:3, chaserMin:10, solutionCost:45000 },
+  enterprise: { volume:80,  intakeTime:100, paraRate:95,  attyRate:400, attyPct:25, targetTime:5, chasers:4, chaserMin:12, solutionCost:90000 },
+};
+
+/* ── SLIDER CONFIGS ─────────────────────────────────────────────────────────── */
+const sliders = {
+  volume:       { min:1,   max:200,    step:1    },
+  intakeTime:   { min:15,  max:180,    step:5    },
+  paraRate:     { min:30,  max:200,    step:5    },
+  attyRate:     { min:100, max:800,    step:25   },
+  attyPct:      { min:0,   max:80,     step:5    },
+  targetTime:   { min:1,   max:30,     step:1    },
+  chasers:      { min:0,   max:10,     step:1    },
+  chaserMin:    { min:2,   max:30,     step:1    },
+  solutionCost: { min:5000,max:200000, step:5000 },
+};
+
+/* ── FORMAT HELPERS ─────────────────────────────────────────────────────────── */
+function fmt$( n ) { return '$' + Math.round(n).toLocaleString(); }
+function fmtN( n ) { return n.toLocaleString(); }
+function fmtH( n ) {
+  if (n < 1) return Math.round(n * 60) + ' min';
+  const h = Math.round(n * 10) / 10;
+  return h + ' hr' + (h !== 1 ? 's' : '');
+}
+function fmtW( n ) {
+  const w = Math.round(n * 10) / 10;
+  return w + ' wk' + (w !== 1 ? 's' : '');
+}
+
+/* ── FILL TRACK UPDATE ─────────────────────────────────────────────────────── */
+function updateTrack(key) {
+  const sl = document.getElementById('sl-' + key);
+  const track = document.getElementById('track-' + key);
+  if (!sl || !track) return;
+  const cfg = sliders[key];
+  const pct = (sl.value - sl.min) / (sl.max - sl.min) * 100;
+  track.style.width = pct + '%';
+}
+
+/* ── SYNC SLIDER → NUMBER INPUT ─────────────────────────────────────────────── */
+function sync(key) {
+  const sl = document.getElementById('sl-' + key);
+  const nv = document.getElementById('nv-' + key);
+  state[key] = +sl.value;
+  nv.value = sl.value;
+  updateTrack(key);
+  recalc();
+}
+
+/* ── SYNC NUMBER INPUT → SLIDER ─────────────────────────────────────────────── */
+function syncNum(key) {
+  const sl = document.getElementById('sl-' + key);
+  const nv = document.getElementById('nv-' + key);
+  const val = Math.max(+nv.min || 0, Math.min(+nv.max || 99999, +nv.value || 0));
+  state[key] = val;
+  const cfg = sliders[key];
+  sl.value = Math.max(cfg.min, Math.min(cfg.max, val));
+  updateTrack(key);
+  recalc();
+}
+
+/* ── LOAD SCENARIO ──────────────────────────────────────────────────────────── */
+function loadScenario(name, btn) {
+  // tab UI
+  document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (name === 'custom') { recalc(); return; }
+
+  const sc = scenarios[name];
+  Object.keys(sc).forEach(key => {
+    state[key] = sc[key];
+    const sl = document.getElementById('sl-' + key);
+    const nv = document.getElementById('nv-' + key);
+    if (sl) { sl.value = Math.max(sl.min, Math.min(sl.max, sc[key])); updateTrack(key); }
+    if (nv) nv.value = sc[key];
+  });
+  recalc();
+}
+
+/* ── TOGGLE ASSUMPTIONS ─────────────────────────────────────────────────────── */
+function toggleAssumptions() {
+  const body   = document.getElementById('assump-body');
+  const toggle = document.getElementById('assump-toggle');
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+/* ── ANIMATE NUMBER ─────────────────────────────────────────────────────────── */
+function animateValue(el, endVal, formatter) {
+  const startVal = parseFloat(el.dataset.val || 0);
+  el.dataset.val = endVal;
+  const duration = 500;
+  const start = performance.now();
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const cur = startVal + (endVal - startVal) * ease;
+    el.textContent = formatter(cur);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = formatter(endVal);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── MAIN CALCULATION ───────────────────────────────────────────────────────── */
+function recalc() {
+  const {
+    volume, intakeTime, paraRate, attyRate,
+    attyPct, targetTime, chasers, chaserMin, solutionCost
+  } = state;
+
+  // Time calculations
+  const intakeHrsBefore = (volume * intakeTime) / 60;
+  const intakeHrsAfter  = (volume * targetTime) / 60;
+  const intakeSaved     = intakeHrsBefore - intakeHrsAfter;
+
+  const chaserHrsSaved  = (volume * chasers * chaserMin) / 60;
+  const totalHrsSaved   = intakeSaved + chaserHrsSaved;
+
+  const attyFraction = attyPct / 100;
+  const paraFraction = 1 - attyFraction;
+  const attyHrsSaved = totalHrsSaved * attyFraction;
+
+  const weeksFreed = totalHrsSaved / 40;
+
+  // Cost calculations
+  const blendedRate = (paraRate * paraFraction) + (attyRate * attyFraction);
+  const monthlySavings  = totalHrsSaved * blendedRate;
+  const annualSavings   = monthlySavings * 12;
+  const annualProcessCost = intakeHrsBefore * blendedRate * 12;
+
+  // ROI %
+  const netBenefit = annualSavings - solutionCost;
+  const roiPct = solutionCost > 0 ? (netBenefit / solutionCost) * 100 : 0;
+  const roiBarPct = Math.min(Math.max(roiPct, 0), 500);
+  const roiBarWidth = Math.min((roiBarPct / 500) * 100, 100);
+
+  // Payback
+  const paybackMonths = solutionCost > 0 && monthlySavings > 0
+    ? solutionCost / monthlySavings
+    : null;
+
+  // ── UPDATE DOM ──────────────────────────────────────────────────────────── //
+  // Big savings number
+  const savingsEl = document.getElementById('r-annual-savings');
+  animateValue(savingsEl, annualSavings, n => Math.round(n).toLocaleString());
+  document.getElementById('r-sublabel').textContent =
+    `Based on ${volume} subpoenas/month · ${Math.round(intakeTime)} min current intake`;
+
+  // Metric cells
+  animateValue(document.getElementById('r-hrs-monthly'), totalHrsSaved, n => fmtH(n));
+  animateValue(document.getElementById('r-weeks-monthly'), weeksFreed, n => fmtW(n));
+  animateValue(document.getElementById('r-monthly-savings'), monthlySavings, n => fmt$(n));
+
+  // Payback metric cell
+  const pbEl = document.getElementById('r-payback');
+  if (paybackMonths) {
+    pbEl.textContent = paybackMonths < 1
+      ? '< 1 month'
+      : Math.round(paybackMonths) + ' mos';
+    pbEl.classList.add('green');
+  } else {
+    pbEl.textContent = '—';
+    pbEl.classList.remove('green');
+  }
+
+  // ROI bar
+  document.getElementById('r-roi-bar').style.width = roiBarWidth + '%';
+  document.getElementById('r-roi-pct').textContent = roiPct > 0
+    ? `Estimated ROI: ${Math.round(roiPct).toLocaleString()}% (net benefit: ${fmt$(netBenefit)}/yr)`
+    : 'Increase inputs to calculate ROI';
+
+  // Breakdown
+  document.getElementById('r-b-intake-time').textContent = fmtH(intakeHrsBefore);
+  document.getElementById('r-a-intake-time').textContent = fmtH(intakeHrsAfter);
+  document.getElementById('r-chaser-time').textContent  = fmtH(chaserHrsSaved) + ' saved';
+  document.getElementById('r-atty-time').textContent    = fmtH(attyHrsSaved) + '/mo';
+  document.getElementById('r-total-cost').textContent   = fmt$(annualProcessCost) + '/yr';
+
+  // Payback strip
+  const ps = document.getElementById('payback-strip');
+  const psVal = document.getElementById('r-payback-strip');
+  if (paybackMonths && paybackMonths < 24) {
+    ps.style.display = 'flex';
+    psVal.textContent = paybackMonths < 1
+      ? 'Less than 1 month'
+      : `~${Math.round(paybackMonths)} month${Math.round(paybackMonths) !== 1 ? 's' : ''}`;
+  } else {
+    ps.style.display = paybackMonths ? 'flex' : 'none';
+    psVal.textContent = paybackMonths ? `~${Math.round(paybackMonths)} months` : '—';
+  }
+}
+
+/* ── INIT ─────────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Set slider fill tracks on load
+  Object.keys(sliders).forEach(key => updateTrack(key));
+
+  // Wire up range fill animation on all sliders
+  document.querySelectorAll('input[type="range"]').forEach(sl => {
+    const key = sl.id.replace('sl-', '');
+    sl.addEventListener('input', () => updateTrack(key));
+  });
+
+  recalc();
+});
+</script>
+</body>
+</html>
