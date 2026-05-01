@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exterro Subpoena Manager — BDR Sequence</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#F26C38;--orange-dk:#C8541E;--orange-lt:rgba(242,108,56,0.10);--orange-xl:rgba(242,108,56,0.05);
+  --purple:#3A2155;--purple-md:#4B2D6E;--purple-lt:rgba(58,33,85,0.08);--purple-xl:rgba(58,33,85,0.04);
+  --charcoal:#323132;--silver:#6D6E70;--mid-gray:#E2E3E5;--lt-gray:#F1F1F2;--off-white:#F7F8FA;--white:#FFFFFF;
+  --blue:#64ADC6;--green:#27AE60;--red:#E74C3C;
+  --radius:10px;--radius-sm:7px;
+  --shadow:0 2px 12px rgba(58,33,85,0.09);--shadow-md:0 6px 24px rgba(58,33,85,0.13);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px}
+body{font-family:'Lato',sans-serif;background:var(--off-white);color:var(--charcoal);min-height:100vh}
+
+/* HEADER */
+.top-header{background:var(--purple);padding:0 48px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(58,33,85,0.28)}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{font-size:20px;font-weight:900;color:var(--white);letter-spacing:-.3px}
+.logo .x{color:var(--orange)}
+.brand-sep{width:1px;height:18px;background:rgba(255,255,255,0.22)}
+.brand-label{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.header-badge{background:rgba(242,108,56,0.22);border:1px solid rgba(242,108,56,0.4);color:#FFBB99;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px}
+
+/* SHELL */
+.shell{max-width:1220px;margin:0 auto;padding:36px 48px 80px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.shell{animation:fadeUp .35s ease both}
+
+/* PAGE HEADER */
+.page-hdr{margin-bottom:30px}
+.page-eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.page-title{font-size:32px;font-weight:900;color:var(--purple);line-height:1.1;margin-bottom:10px}
+.page-title .acc{color:var(--orange)}
+.page-sub{font-size:14px;color:var(--silver);line-height:1.7;max-width:660px}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
+.stat-box{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);padding:14px 16px;border-top:3px solid var(--orange);box-shadow:var(--shadow)}
+.stat-box:nth-child(2){border-top-color:var(--purple-md)}
+.stat-box:nth-child(3){border-top-color:var(--blue)}
+.stat-box:nth-child(4){border-top-color:var(--green)}
+.stat-box:nth-child(5){border-top-color:var(--orange)}
+.sb-num{font-size:24px;font-weight:900;color:var(--orange);line-height:1;margin-bottom:3px}
+.stat-box:nth-child(2) .sb-num{color:var(--purple-md)}
+.stat-box:nth-child(3) .sb-num{color:var(--blue)}
+.stat-box:nth-child(4) .sb-num{color:var(--green)}
+.sb-lbl{font-size:10.5px;color:var(--silver);line-height:1.35}
+
+/* OVERVIEW STRIP */
+.overview-strip{background:var(--purple);border-radius:var(--radius);padding:20px 28px;margin-bottom:26px;display:flex;gap:0;overflow:hidden;position:relative;box-shadow:var(--shadow-md)}
+.overview-strip::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(242,108,56,0.1);pointer-events:none}
+.os-col{flex:1;padding:0 22px;border-right:1px solid rgba(255,255,255,0.1);position:relative;z-index:1}
+.os-col:first-child{padding-left:0}
+.os-col:last-child{border-right:none}
+.os-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px}
+.os-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px}
+.os-desc{font-size:11px;color:rgba(255,255,255,0.52);line-height:1.5}
+
+/* FULL-SEQUENCE TIMELINE */
+.full-timeline{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px}
+.ft-header{background:var(--off-white);border-bottom:1px solid var(--mid-gray);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.ft-title{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple)}
+.ft-sub{font-size:11px;color:var(--silver)}
+.ft-scroll{overflow-x:auto;padding:16px 20px 14px}
+.ft-track{display:flex;gap:6px;min-width:max-content;align-items:stretch}
+.ft-touch{display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .15s;border-radius:8px;padding:8px 6px 8px;border:1.5px solid var(--lt-gray);min-width:64px;background:var(--white);position:relative}
+.ft-touch:hover{border-color:var(--orange);background:var(--orange-xl)}
+.ft-touch.active{border-color:var(--orange);background:var(--orange-lt)}
+.ft-touch.active .ft-ch-icon{background:var(--orange)}
+.ft-day{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver);margin-bottom:5px}
+.ft-ch-icon{width:28px;height:28px;border-radius:50%;background:var(--mid-gray);display:flex;align-items:center;justify-content:center;font-size:13px;margin-bottom:5px;transition:background .15s;flex-shrink:0}
+.ft-touch.active .ft-day{color:var(--orange-dk)}
+.ft-num{font-size:9px;color:var(--silver);font-weight:700;font-family:'DM Mono',monospace}
+.ft-connector{width:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--mid-gray);font-size:10px;align-self:center;padding-top:4px}
+
+/* SEQUENCE TABS (email steps) */
+.seq-tabs{display:flex;gap:0;margin-bottom:24px;background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);overflow-x:auto}
+.seq-tab{flex:0 0 auto;min-width:120px;padding:14px 18px;border-right:1px solid var(--mid-gray);cursor:pointer;transition:background .18s;position:relative}
+.seq-tab:last-child{border-right:none}
+.seq-tab:hover{background:var(--purple-xl)}
+.seq-tab.active{background:var(--purple-lt)}
+.seq-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--orange)}
+.st-badge{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:4px}
+.st-dot{width:6px;height:6px;border-radius:50%;background:var(--orange)}
+.st-title{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:2px;line-height:1.2}
+.st-day{font-size:10.5px;color:var(--silver);margin-bottom:5px}
+.st-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 8px;border-radius:20px}
+.tag-pain{background:rgba(231,76,60,0.10);color:#C0392B}
+.tag-edu{background:rgba(100,173,198,0.12);color:#185FA5}
+.tag-risk{background:rgba(243,156,18,0.12);color:#B7770D}
+.tag-platform{background:rgba(39,174,96,0.10);color:var(--green)}
+.tag-ai{background:var(--purple-lt);color:var(--purple-md)}
+.tag-break{background:var(--orange-lt);color:var(--orange-dk)}
+
+/* CONTROLS */
+.controls-row{display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.ctrl-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver);margin-right:4px}
+.p-btn{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid var(--mid-gray);background:var(--white);color:var(--silver);cursor:pointer;transition:all .15s;font-family:'Lato',sans-serif;box-shadow:var(--shadow)}
+.p-btn:hover{border-color:var(--orange);color:var(--orange-dk)}
+.p-btn.active{background:var(--purple);border-color:var(--purple);color:var(--white)}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
+
+/* COMPOSER */
+.composer{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden}
+.composer-titlebar{background:var(--purple);padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
+.ctb-dots{display:flex;gap:6px;align-items:center}
+.ctb-dot{width:10px;height:10px;border-radius:50%}
+.ctb-label{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.38);margin-left:10px}
+.copy-btn{background:rgba(242,108,56,0.22);border:1px solid rgba(242,108,56,0.4);color:#FFBB99;font-size:11px;font-weight:700;padding:5px 14px;border-radius:5px;cursor:pointer;transition:all .15s;font-family:'Lato',sans-serif;display:flex;align-items:center;gap:5px}
+.copy-btn:hover{background:rgba(242,108,56,0.32)}
+.copy-btn.copied{background:rgba(39,174,96,0.2);border-color:rgba(39,174,96,0.4);color:#8ee8b0}
+.email-meta-bar{border-bottom:1px solid var(--lt-gray)}
+.emb-row{display:flex;align-items:baseline;gap:14px;padding:9px 24px;border-bottom:1px solid var(--lt-gray);font-family:'DM Mono',monospace;font-size:12px}
+.emb-row:last-child{border-bottom:none}
+.emb-field{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--silver);min-width:64px;flex-shrink:0}
+.emb-value{color:var(--charcoal);line-height:1.4}
+.emb-ph{color:var(--orange);background:var(--orange-lt);border-radius:3px;padding:1px 6px;font-size:11px}
+.email-body-area{padding:26px 28px 22px;font-size:14px;color:var(--charcoal);line-height:1.85}
+.email-body-area p{margin-bottom:14px}
+.email-body-area p:last-child{margin-bottom:0}
+.ph{color:var(--orange);background:var(--orange-lt);border-radius:3px;padding:1px 6px;font-size:13px;font-weight:700}
+.email-body-area strong{color:var(--purple);font-weight:700}
+.bullet-list{margin:10px 0 14px 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.bullet-list li{font-size:14px;color:var(--charcoal);padding-left:18px;position:relative;line-height:1.6}
+.bullet-list li::before{content:'→';position:absolute;left:0;color:var(--orange);font-weight:700}
+.email-body-area .sig{color:var(--silver);font-size:13px;line-height:1.7}
+.email-body-area .sig strong{color:var(--charcoal)}
+.trigger-note-line{font-size:13px;color:var(--purple-md);background:var(--purple-lt);border-left:3px solid var(--purple-md);padding:8px 14px;border-radius:0 6px 6px 0;margin-bottom:14px;line-height:1.55}
+.trigger-note-line .tn-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);display:block;margin-bottom:3px}
+
+/* CHANNEL INDICATOR */
+.channel-badge-bar{padding:10px 24px;border-bottom:1px solid var(--lt-gray);display:flex;align-items:center;gap:8px;background:var(--off-white)}
+.ch-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:20px}
+.ch-email{background:var(--orange-lt);color:var(--orange-dk);border:1px solid rgba(242,108,56,0.2)}
+.ch-phone{background:rgba(100,173,198,0.12);color:#185FA5;border:1px solid rgba(100,173,198,0.25)}
+.ch-linkedin{background:var(--purple-lt);color:var(--purple-md);border:1px solid rgba(58,33,85,0.18)}
+.ch-sep{color:var(--mid-gray);font-size:12px;margin:0 2px}
+.ch-goal{font-size:11px;color:var(--silver);margin-left:auto;font-style:italic}
+
+/* SUBJECT VARIANTS */
+.subjects-block{margin:0 28px 24px;border:1px solid var(--mid-gray);border-radius:var(--radius);overflow:hidden;background:var(--white)}
+.sb-header{background:var(--off-white);padding:9px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--lt-gray)}
+.sbh-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);flex:1}
+.sbh-hint{font-size:10px;color:var(--silver)}
+.subj-list{display:flex;flex-direction:column}
+.subj-item{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--lt-gray);cursor:pointer;transition:background .14s;gap:10px}
+.subj-item:last-child{border-bottom:none}
+.subj-item:hover{background:var(--orange-xl)}
+.subj-item.active{background:var(--orange-lt)}
+.subj-text{font-size:13px;color:var(--charcoal);line-height:1.4;flex:1}
+.subj-item.active .subj-text{font-weight:700;color:var(--orange-dk)}
+.subj-copy-btn{font-size:10px;font-weight:700;color:var(--silver);background:var(--lt-gray);border:none;border-radius:4px;padding:3px 8px;cursor:pointer;font-family:'Lato',sans-serif;flex-shrink:0;transition:all .15s}
+.subj-copy-btn:hover{background:var(--orange);color:var(--white)}
+
+/* ASSET BLOCK */
+.asset-block{margin:0 28px 24px;border:1px dashed var(--mid-gray);border-radius:var(--radius);overflow:hidden;transition:border-color .2s}
+.asset-block:hover{border-color:var(--orange)}
+.asset-block-header{background:var(--off-white);padding:9px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--lt-gray)}
+.abh-icon{font-size:14px}
+.abh-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);flex:1}
+.abh-hint{font-size:10px;color:var(--silver)}
+.asset-selector{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--white)}
+.asset-opt{padding:5px 13px;border-radius:20px;font-size:11.5px;font-weight:700;border:1.5px solid var(--mid-gray);background:var(--white);color:var(--silver);cursor:pointer;transition:all .15s;font-family:'Lato',sans-serif}
+.asset-opt:hover{border-color:var(--purple);color:var(--purple)}
+.asset-opt.active{background:var(--purple);border-color:var(--purple);color:var(--white)}
+.asset-preview{padding:12px 14px;background:var(--purple-xl);border-top:1px solid var(--lt-gray);display:none}
+.asset-preview.show{display:block}
+.ap-row{display:flex;align-items:center;gap:10px}
+.ap-icon-box{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ap-name{font-size:12.5px;font-weight:700}
+.ap-meta{font-size:11px;color:var(--silver);margin-top:1px;font-weight:400}
+.ap-btn{margin-left:auto;background:var(--orange);color:var(--white);font-size:11px;font-weight:700;padding:5px 13px;border-radius:5px;border:none;cursor:pointer;font-family:'Lato',sans-serif;transition:background .15s;flex-shrink:0}
+.ap-btn:hover{background:var(--orange-dk)}
+.asset-ps{margin:10px 14px 0;font-size:12px;color:var(--purple-md);background:var(--purple-lt);padding:8px 12px;border-radius:6px;line-height:1.55;border:1px solid rgba(58,33,85,0.12)}
+.asset-ps .aps-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--orange);display:block;margin-bottom:3px}
+
+/* RIGHT PANEL */
+.right-panel{display:flex;flex-direction:column;gap:16px;position:sticky;top:76px}
+.rp-card{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.rpc-header{padding:11px 18px;border-bottom:1px solid var(--lt-gray);display:flex;align-items:center;gap:8px;background:var(--off-white)}
+.rpc-icon{font-size:14px}
+.rpc-title{font-size:12px;font-weight:700;color:var(--purple)}
+.rpc-body{padding:14px 18px}
+.timing-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--lt-gray);font-size:12px}
+.timing-row:last-child{border-bottom:none}
+.tr-label{color:var(--silver)}
+.tr-val{font-weight:700;font-family:'DM Mono',monospace;font-size:11.5px}
+.tr-val.orange{color:var(--orange-dk)}
+.tr-val.purple{color:var(--purple)}
+.tr-val.green{color:var(--green)}
+.tr-val.blue{color:var(--blue)}
+.coaching-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+.coaching-list li{font-size:12px;color:var(--silver);line-height:1.55;padding-left:14px;position:relative}
+.coaching-list li::before{content:'›';position:absolute;left:0;color:var(--orange);font-weight:700}
+.signal-grid{display:flex;flex-direction:column;gap:6px}
+.signal-item{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;border:1px solid var(--lt-gray);font-size:12px;color:var(--charcoal);line-height:1.45}
+.signal-item:hover{border-color:var(--orange);background:var(--orange-xl)}
+.signal-item.checked{border-color:var(--green);background:rgba(39,174,96,0.06);color:var(--silver);text-decoration:line-through}
+.si-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+.si-chk{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--mid-gray);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .15s;margin-left:auto}
+.signal-item.checked .si-chk{background:var(--green);border-color:var(--green);color:white}
+
+/* PHONE SCRIPT PANEL */
+.phone-script{margin-top:16px}
+.ps-toggle{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--purple-md);cursor:pointer;padding:10px 18px;border-radius:var(--radius-sm);background:var(--purple-lt);border:none;width:100%;font-family:'Lato',sans-serif;transition:background .15s}
+.ps-toggle:hover{background:rgba(58,33,85,0.13)}
+.ps-toggle .ps-chevron{margin-left:auto;transition:transform .2s;font-size:14px}
+.ps-toggle.open .ps-chevron{transform:rotate(180deg)}
+.ps-body{display:none;border:1px solid var(--mid-gray);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);overflow:hidden}
+.ps-body.open{display:block}
+.ps-section{padding:12px 16px;border-bottom:1px solid var(--lt-gray)}
+.ps-section:last-child{border-bottom:none}
+.ps-section-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.ps-text{font-size:12.5px;color:var(--charcoal);line-height:1.65}
+.ps-text .ps-ph{color:var(--orange);font-weight:700}
+.ps-if{margin-top:8px;padding:8px 10px;border-radius:6px;font-size:11.5px;color:var(--silver);line-height:1.55}
+.ps-if.yes{background:rgba(39,174,96,0.07);border-left:2px solid var(--green)}
+.ps-if.no{background:rgba(231,76,60,0.06);border-left:2px solid var(--red)}
+.ps-if-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px}
+.ps-if.yes .ps-if-label{color:var(--green)}
+.ps-if.no .ps-if-label{color:var(--red)}
+
+/* LINKEDIN PANEL */
+.li-panel{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:0}
+.li-header{background:rgba(10,102,194,0.07);padding:10px 16px;border-bottom:1px solid rgba(10,102,194,0.14);display:flex;align-items:center;gap:8px}
+.li-icon{font-size:15px}
+.li-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0A66C2}
+.li-body{padding:14px 16px;font-size:13px;color:var(--charcoal);line-height:1.75}
+.li-note{font-size:11px;color:var(--silver);margin-top:8px;padding:7px 10px;background:var(--lt-gray);border-radius:6px;line-height:1.5}
+
+/* BOTTOM SECTIONS */
+.bottom{margin-top:28px}
+.bs-hdr{margin-bottom:18px}
+.bs-hdr h2{font-size:20px;font-weight:900;color:var(--purple);margin-bottom:4px}
+.bs-bar{width:32px;height:3px;background:var(--orange);border-radius:2px;margin-top:6px}
+.bs-note{font-size:13px;color:var(--silver);margin-top:4px}
+.strat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+.strat-card{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);border-top:3px solid var(--purple);position:relative;overflow:hidden}
+.strat-card:nth-child(2){border-top-color:var(--orange)}
+.strat-card:nth-child(3){border-top-color:var(--blue)}
+.sc-num{font-size:40px;font-weight:900;color:var(--purple);opacity:.07;position:absolute;top:10px;right:16px;line-height:1}
+.sc-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 9px;border-radius:20px;margin-bottom:10px}
+.b1{background:var(--purple-lt);color:var(--purple)}.b2{background:var(--orange-lt);color:var(--orange-dk)}.b3{background:rgba(100,173,198,0.12);color:#185FA5}
+.sc-title{font-size:13.5px;font-weight:700;color:var(--purple);margin-bottom:8px;line-height:1.3}
+.sc-body{font-size:12px;color:var(--silver);line-height:1.65}
+.sc-body strong{color:var(--charcoal);font-weight:700}
+.tech-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.tt{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid}
+.tt-pain{background:rgba(231,76,60,0.08);color:#C0392B;border-color:rgba(231,76,60,0.2)}
+.tt-edu{background:rgba(100,173,198,0.08);color:#185FA5;border-color:rgba(100,173,198,0.25)}
+.tt-ai{background:var(--purple-lt);color:var(--purple-md);border-color:rgba(58,33,85,0.2)}
+.tt-platform{background:rgba(39,174,96,0.07);color:var(--green);border-color:rgba(39,174,96,0.2)}
+.tt-break{background:var(--orange-lt);color:var(--orange-dk);border-color:rgba(242,108,56,0.25)}
+.tt-asset{background:rgba(75,45,110,0.08);color:var(--purple-md);border-color:rgba(75,45,110,0.2)}
+.dos-donts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px}
+.dd-card{background:var(--white);border:1px solid var(--mid-gray);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.dd-hdr{padding:11px 18px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.dd-hdr.green{background:rgba(39,174,96,0.07);color:var(--green);border-bottom:1px solid rgba(39,174,96,0.15)}
+.dd-hdr.red{background:rgba(231,76,60,0.06);color:#C0392B;border-bottom:1px solid rgba(231,76,60,0.15)}
+.dd-body{padding:14px 18px}
+.dd-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}
+.dd-list li{font-size:12.5px;color:var(--silver);line-height:1.5;padding-left:18px;position:relative}
+.dd-list.do li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.dd-list.dont li::before{content:'✗';position:absolute;left:0;color:#E74C3C;font-weight:700}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--purple);color:var(--white);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all .28s;pointer-events:none;z-index:200;box-shadow:var(--shadow-md)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:900px){
+  .shell{padding:24px 20px 60px}
+  .top-header{padding:0 20px}
+  .main-grid{grid-template-columns:1fr}
+  .right-panel{position:static}
+  .stats-row{grid-template-columns:repeat(3,1fr)}
+  .seq-tabs{overflow-x:auto}
+  .strat-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="top-header">
+  <div class="brand">
+    <div class="logo">e<span class="x">x</span>terro<sup style="font-size:9px;vertical-align:super">®</sup></div>
+    <div class="brand-sep"></div>
+    <div class="brand-label">Subpoena Manager · BDR Sequence</div>
+  </div>
+  <div class="header-badge">Internal · BDR Use Only</div>
+</header>
+
+<div class="shell">
+
+<!-- PAGE HEADER -->
+<div class="page-hdr">
+  <div class="page-eyebrow">BDR Outreach Sequence</div>
+  <div class="page-title">Exterro <span class="acc">Subpoena Manager</span></div>
+  <div class="page-sub">6 emails · 4 calls · 3 LinkedIn touches · 25 days · Select a persona, pick an email, copy and send. Full phone scripts and LinkedIn messages included.</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-box"><div class="sb-num">6</div><div class="sb-lbl">Emails<br>in sequence</div></div>
+  <div class="stat-box"><div class="sb-num">4</div><div class="sb-lbl">Phone<br>touchpoints</div></div>
+  <div class="stat-box"><div class="sb-num">25</div><div class="sb-lbl">Days<br>total duration</div></div>
+  <div class="stat-box"><div class="sb-num">14</div><div class="sb-lbl">Total<br>touchpoints</div></div>
+  <div class="stat-box"><div class="sb-num">4</div><div class="sb-lbl">Target<br>personas</div></div>
+</div>
+
+<!-- OVERVIEW STRIP -->
+<div class="overview-strip">
+  <div class="os-col">
+    <div class="os-label">Goal</div>
+    <div class="os-name">Educate → Engage → Set Meeting</div>
+    <div class="os-desc">Build awareness of the intake problem, establish credibility, and convert to a 20-minute discovery conversation.</div>
+  </div>
+  <div class="os-col">
+    <div class="os-label">Core Message</div>
+    <div class="os-name">Subpoena response should not depend on manual work</div>
+    <div class="os-desc">Intake, routing, follow-up, and visibility can be governed and automated while keeping attorneys in control.</div>
+  </div>
+  <div class="os-col">
+    <div class="os-label">Primary CTA</div>
+    <div class="os-name">20-minute discovery conversation</div>
+    <div class="os-desc">Compare how [Company] handles subpoena intake, routing, follow-up, and reporting today versus what Subpoena Manager automates.</div>
+  </div>
+  <div class="os-col">
+    <div class="os-label">Channels</div>
+    <div class="os-name">Email · Phone · LinkedIn</div>
+    <div class="os-desc">Multi-channel sequence with persona-specific messaging across all primary legal operations titles.</div>
+  </div>
+</div>
+
+<!-- FULL SEQUENCE TIMELINE -->
+<div class="full-timeline">
+  <div class="ft-header">
+    <div class="ft-title">Full 25-Day Touchpoint Map</div>
+    <div class="ft-sub">Click any touchpoint to jump to that step</div>
+  </div>
+  <div class="ft-scroll">
+    <div class="ft-track" id="ft-track">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL SEQUENCE TABS -->
+<div class="seq-tabs" id="seq-tabs">
+  <div class="seq-tab active" onclick="setEmail(1,this)">
+    <div class="st-badge"><span class="st-dot"></span>Email 1</div>
+    <div class="st-title">Intake Bottlenecks</div>
+    <div class="st-day">Day 1</div>
+    <div class="st-tag tag-pain">Pain opener</div>
+  </div>
+  <div class="seq-tab" onclick="setEmail(2,this)">
+    <div class="st-badge"><span class="st-dot"></span>Email 2</div>
+    <div class="st-title">From Intake to Action</div>
+    <div class="st-day">Day 5</div>
+    <div class="st-tag tag-edu">Solution intro</div>
+  </div>
+  <div class="seq-tab" onclick="setEmail(3,this)">
+    <div class="st-badge"><span class="st-dot"></span>Email 3</div>
+    <div class="st-title">Risk of Manual Handoffs</div>
+    <div class="st-day">Day 10</div>
+    <div class="st-tag tag-risk">Risk frame</div>
+  </div>
+  <div class="seq-tab" onclick="setEmail(4,this)">
+    <div class="st-badge"><span class="st-dot"></span>Email 4</div>
+    <div class="st-title">Connect to eDiscovery</div>
+    <div class="st-day">Day 15</div>
+    <div class="st-tag tag-platform">Platform value</div>
+  </div>
+  <div class="seq-tab" onclick="setEmail(5,this)">
+    <div class="st-badge"><span class="st-dot"></span>Email 5</div>
+    <div class="st-title">Governed AI</div>
+    <div class="st-day">Day 19</div>
+    <div class="st-tag tag-ai">AI angle</div>
+  </div>
+  <div class="seq-tab" onclick="setEmail(6,this)">
+    <div class="st-badge"><span class="st-dot"></span>Email 6</div>
+    <div class="st-title">Breakup / Final Note</div>
+    <div class="st-day">Day 25</div>
+    <div class="st-tag tag-break">Breakup</div>
+  </div>
+</div>
+
+<!-- PERSONA CONTROLS -->
+<div class="controls-row">
+  <span class="ctrl-label">Persona:</span>
+  <button class="p-btn active" onclick="setPersona('legalops',this)">Legal Operations</button>
+  <button class="p-btn" onclick="setPersona('gc',this)">General Counsel</button>
+  <button class="p-btn" onclick="setPersona('paralegal',this)">Senior Paralegal</button>
+  <button class="p-btn" onclick="setPersona('edisco',this)">eDiscovery / Litigation</button>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- COMPOSER -->
+  <div>
+    <div class="composer">
+      <div class="composer-titlebar">
+        <div style="display:flex;align-items:center">
+          <div class="ctb-dots">
+            <div class="ctb-dot" style="background:#FF5F57"></div>
+            <div class="ctb-dot" style="background:#FEBC2E"></div>
+            <div class="ctb-dot" style="background:#28C840"></div>
+          </div>
+          <span class="ctb-label" id="ct-label">email_01_legalops.txt</span>
+        </div>
+        <button class="copy-btn" id="copy-btn" onclick="copyEmail()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="4" y="4" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 8V1h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Copy Email
+        </button>
+      </div>
+
+      <!-- Channel badge -->
+      <div class="channel-badge-bar" id="channel-bar">
+        <span class="ch-badge ch-email">✉️ Email</span>
+        <span class="ch-sep">·</span>
+        <span class="ch-goal" id="ch-goal-text">Day 1 · Goal: Start with the pain</span>
+      </div>
+
+      <!-- Email meta -->
+      <div class="email-meta-bar">
+        <div class="emb-row">
+          <span class="emb-field">To</span>
+          <span class="emb-value"><span class="emb-ph">[First Name Last Name]</span> &lt;<span class="emb-ph">[email@company.com]</span>&gt;</span>
+        </div>
+        <div class="emb-row">
+          <span class="emb-field">From</span>
+          <span class="emb-value"><span class="emb-ph">[Your Name]</span> · Business Development, Exterro</span>
+        </div>
+        <div class="emb-row">
+          <span class="emb-field">Subject</span>
+          <span class="emb-value" id="email-subject"></span>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="email-body-area" id="email-body"></div>
+
+      <!-- Subject line variants -->
+      <div class="subjects-block">
+        <div class="sb-header">
+          <span class="abh-icon">✏️</span>
+          <span class="sbh-label">Subject Line Options</span>
+          <span class="sbh-hint">Click to use · Click copy to grab</span>
+        </div>
+        <div class="subj-list" id="subj-list"></div>
+      </div>
+
+      <!-- Asset block -->
+      <div class="asset-block">
+        <div class="asset-block-header">
+          <span class="abh-icon">📎</span>
+          <span class="abh-label">Attach an Asset</span>
+          <span class="abh-hint" id="asset-count-hint">Choose what to include with this email</span>
+        </div>
+        <div class="asset-selector" id="asset-selector"></div>
+        <div class="asset-preview show" id="asset-preview"></div>
+      </div>
+
+    </div><!-- /composer -->
+
+    <!-- PHONE SCRIPT (collapsible) -->
+    <div class="phone-script" id="phone-script-wrap">
+      <button class="ps-toggle" id="ps-toggle" onclick="togglePhone()">
+        <span>📞</span> <span id="ps-toggle-label">Phone Script</span>
+        <span class="ps-chevron">▾</span>
+      </button>
+      <div class="ps-body" id="ps-body"></div>
+    </div>
+
+    <!-- LINKEDIN (shown on relevant days) -->
+    <div id="li-wrap" style="display:none;margin-top:16px">
+      <div class="li-panel">
+        <div class="li-header">
+          <span class="li-icon">💼</span>
+          <span class="li-label" id="li-header-label">LinkedIn Touch</span>
+        </div>
+        <div class="li-body" id="li-body"></div>
+      </div>
+    </div>
+
+  </div><!-- /left -->
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- Timing card -->
+    <div class="rp-card">
+      <div class="rpc-header">
+        <span class="rpc-icon">📅</span>
+        <span class="rpc-title">Sequence Timing</span>
+      </div>
+      <div class="rpc-body">
+        <div class="timing-row"><span class="tr-label">This touchpoint</span><span class="tr-val orange" id="tp-day">Day 1</span></div>
+        <div class="timing-row"><span class="tr-label">Touch #</span><span class="tr-val purple" id="tp-num">1 of 14</span></div>
+        <div class="timing-row"><span class="tr-label">Channel</span><span class="tr-val blue" id="tp-channel">Email</span></div>
+        <div class="timing-row"><span class="tr-label">Email goal</span><span class="tr-val" id="tp-goal" style="color:var(--charcoal);font-family:'Lato';font-size:11.5px">Start with the pain</span></div>
+        <div class="timing-row"><span class="tr-label">Next touch</span><span class="tr-val orange" id="tp-next">Day 2 · Phone</span></div>
+      </div>
+    </div>
+
+    <!-- Coaching card -->
+    <div class="rp-card">
+      <div class="rpc-header">
+        <span class="rpc-icon">🎯</span>
+        <span class="rpc-title" id="coaching-title">BDR Coaching Notes</span>
+      </div>
+      <div class="rpc-body">
+        <ul class="coaching-list" id="coaching-list"></ul>
+      </div>
+    </div>
+
+    <!-- Buying signals card -->
+    <div class="rp-card">
+      <div class="rpc-header">
+        <span class="rpc-icon">📡</span>
+        <span class="rpc-title">Buying Signals to Listen For</span>
+      </div>
+      <div class="rpc-body">
+        <div class="signal-grid" id="signal-grid"></div>
+      </div>
+    </div>
+
+    <!-- Key messages card -->
+    <div class="rp-card">
+      <div class="rpc-header">
+        <span class="rpc-icon">💬</span>
+        <span class="rpc-title">Core Messaging Anchors</span>
+      </div>
+      <div class="rpc-body">
+        <ul class="coaching-list">
+          <li>Subpoena response is slowed by manual intake, rekeying, email follow-up, and inconsistent routing</li>
+          <li>Delays and handoff gaps create cost, missed deadlines, limited visibility, and defensibility risk</li>
+          <li>Subpoena Manager moves from request receipt to structured action faster</li>
+          <li>Governed autonomous AI accelerates operational work while preserving human oversight</li>
+          <li>Exterro connects subpoena intake to preservation, collection, review, and production downstream</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /right panel -->
+</div><!-- /main-grid -->
+
+<!-- BOTTOM SECTIONS -->
+<div class="bottom">
+
+  <div class="bs-hdr">
+    <h2>Sequence Strategy</h2>
+    <div class="bs-bar"></div>
+    <div class="bs-note">How each phase of the sequence is designed to build on the last</div>
+  </div>
+
+  <div class="strat-grid">
+    <div class="strat-card">
+      <span class="sc-num">1</span>
+      <span class="sc-badge b1">Week 1 · Days 1–7</span>
+      <div class="sc-title">Educate on the Problem</div>
+      <div class="sc-body">Open with operational pain — manual intake, rekeying, routing gaps. <strong>Don't lead with features.</strong> The goal is to get the prospect to recognize their current process as a problem worth fixing. Use the first email to name the chaos; use the call to get them talking about it.</div>
+      <div class="tech-tags">
+        <span class="tt tt-pain">Pain framing</span>
+        <span class="tt tt-edu">Education</span>
+        <span class="tt tt-asset">Blog / LP</span>
+      </div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-num">2</span>
+      <span class="sc-badge b2">Week 2 · Days 8–17</span>
+      <div class="sc-title">Build Credibility & Relevance</div>
+      <div class="sc-body">Shift from pain to risk and platform value. Introduce visibility gaps, cross-department handoff failures, and the connection to downstream eDiscovery. <strong>Reference their specific role's pain</strong> — Legal Ops cares about ROI, GC cares about defensibility, paralegals care about chasing.</div>
+      <div class="tech-tags">
+        <span class="tt tt-ai">Risk frame</span>
+        <span class="tt tt-platform">Platform</span>
+        <span class="tt tt-asset">Solution brief</span>
+      </div>
+    </div>
+    <div class="strat-card">
+      <span class="sc-num">3</span>
+      <span class="sc-badge b3">Week 3–4 · Days 19–25</span>
+      <div class="sc-title">AI Confidence + Close Loop</div>
+      <div class="sc-body">Use the AI email to address the "speed vs. control" concern proactively — legal buyers want AI that is governed. <strong>The breakup email has the highest reply rate.</strong> Keep it short, re-state the two or three pain points in plain language, and lower the barrier to respond.</div>
+      <div class="tech-tags">
+        <span class="tt tt-ai">Governed AI</span>
+        <span class="tt tt-break">Breakup</span>
+        <span class="tt tt-edu">Exec brief</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bs-hdr" style="margin-top:16px">
+    <h2>Do's &amp; Don'ts</h2>
+    <div class="bs-bar"></div>
+    <div class="bs-note">What separates a response from a delete</div>
+  </div>
+
+  <div class="dos-donts">
+    <div class="dd-card">
+      <div class="dd-hdr green">✓ Do This</div>
+      <div class="dd-body">
+        <ul class="dd-list do">
+          <li>Name their specific role's pain — Legal Ops cares about ROI, GC cares about defensibility</li>
+          <li>Ask process questions before pitching — "How are you managing subpoena routing today?"</li>
+          <li>Use the 90-minute stat early — it lands fast with anyone managing volume</li>
+          <li>Make the AI governance boundary explicit — legal buyers are risk-averse, not anti-AI</li>
+          <li>Connect Subpoena Manager to downstream eDiscovery — that's the platform advantage</li>
+          <li>Keep subject lines short and problem-oriented — not feature-oriented</li>
+          <li>Send the breakup email — it has the highest reply rate in the sequence</li>
+          <li>Personalize the trigger note line on call follow-ups with their specific stack or workflow</li>
+        </ul>
+      </div>
+    </div>
+    <div class="dd-card">
+      <div class="dd-hdr red">✗ Don't Do This</div>
+      <div class="dd-body">
+        <ul class="dd-list dont">
+          <li>Lead with "governed autonomous AI" in the subject line — start with the problem</li>
+          <li>Mention AgentMode as if it is broadly available today — it is the strategic bridge</li>
+          <li>Say "the AI makes decisions" — it handles mechanics, humans control judgment</li>
+          <li>Skip the phone call touchpoints — email alone won't set this meeting</li>
+          <li>Send a wall of text — legal buyers skim, every email should have one clear ask</li>
+          <li>Use generic openers like "I hope this finds you well" or "Just circling back"</li>
+          <li>Over-explain the product before confirming the pain exists — qualify first</li>
+          <li>Forget to reference what the prospect already mentioned if you have prior context</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /bottom -->
+</div><!-- /shell -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════════════════════════ */
+
+// Persona display labels
+const personaLabels = {
+  legalops: 'Legal Operations',
+  gc: 'General Counsel / Deputy GC',
+  paralegal: 'Senior Paralegal / Coordinator',
+  edisco: 'eDiscovery / Litigation Manager'
+};
+
+// Full sequence touchpoints for the timeline bar
+const allTouches = [
+  {day:1, ch:'email', label:'E1', title:'Intake Bottlenecks', email:1},
+  {day:2, ch:'phone', label:'C1', title:'Call 1'},
+  {day:3, ch:'linkedin', label:'Li', title:'Connect Request'},
+  {day:5, ch:'email', label:'E2', title:'Intake to Action', email:2},
+  {day:7, ch:'phone', label:'C2', title:'Call 2'},
+  {day:8, ch:'linkedin', label:'Li', title:'LinkedIn Message'},
+  {day:10,ch:'email', label:'E3', title:'Handoff Risk', email:3},
+  {day:12,ch:'phone', label:'C3', title:'Call 3'},
+  {day:13,ch:'linkedin', label:'Li', title:'LinkedIn Message'},
+  {day:15,ch:'email', label:'E4', title:'eDiscovery Connect', email:4},
+  {day:17,ch:'phone', label:'C4', title:'Call 4'},
+  {day:19,ch:'email', label:'E5', title:'Governed AI', email:5},
+  {day:22,ch:'linkedin', label:'Li', title:'LinkedIn Message'},
+  {day:25,ch:'email', label:'E6', title:'Final Note', email:6},
+];
+
+const chIcons = { email:'✉️', phone:'📞', linkedin:'💼' };
+
+// Buying signals per persona
+const buyingSignals = {
+  legalops:[
+    {icon:'📬',text:'Mentions tracking subpoenas in spreadsheets or email'},
+    {icon:'⏱️',text:'References time spent on intake or routing'},
+    {icon:'📊',text:'Asks about reporting or visibility into volume'},
+    {icon:'🔀',text:'Describes unclear ownership or missed follow-ups'},
+    {icon:'📈',text:'Mentions volume increasing or team being stretched'},
+  ],
+  gc:[
+    {icon:'⚖️',text:'Mentions defensibility, audit trail, or regulatory inquiry'},
+    {icon:'🔍',text:'References a missed deadline or near-miss situation'},
+    {icon:'👥',text:'Asks about human oversight or attorney control'},
+    {icon:'🔒',text:'Expresses concern about inconsistent process'},
+    {icon:'📋',text:'References outside counsel cost or internal capacity'},
+  ],
+  paralegal:[
+    {icon:'📝',text:'Mentions re-entering data across multiple systems'},
+    {icon:'🏃',text:'References chasing HR, Claims, or Compliance for responses'},
+    {icon:'📬',text:'Describes inbox-based tracking or shared inboxes'},
+    {icon:'⏰',text:'Mentions deadline pressure or last-minute scrambles'},
+    {icon:'🔄',text:'Asks if the process can be standardized across the team'},
+  ],
+  edisco:[
+    {icon:'🔗',text:'References handoff gaps between intake and legal hold'},
+    {icon:'📦',text:'Mentions subpoenas triggering preservation or collection'},
+    {icon:'🗂️',text:'Asks about connecting subpoena workflow to eDiscovery tools'},
+    {icon:'⚖️',text:'References chain of custody or audit trail requirements'},
+    {icon:'📊',text:'Asks about reporting on subpoena-triggered matters'},
+  ],
+};
+
+// Phone scripts per email per persona
+const phoneScripts = {
+  1:{
+    voicemail:{
+      legalops:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I'm reaching out because many legal operations teams are looking for a better way to manage subpoena intake, routing, and follow-up without relying on spreadsheets and email chains. Exterro Subpoena Manager helps structure that process from the moment a request comes in. I'll send a short note with more details. Thanks.`,
+      gc:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I'm reaching out because subpoena response is one of those workflows that looks manageable until volume and deadlines create pressure — and the audit trail starts to look thin. I'll send a brief note on how we help legal teams bring more structure and defensibility to that process. Thanks.`,
+      paralegal:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. For a lot of legal teams, subpoena intake still means manually reading requests, re-entering data, and chasing other departments for responses. Exterro Subpoena Manager automates a lot of that coordination work. I'll send a short note. Thanks.`,
+      edisco:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. One of the gaps we hear about most is between subpoena receipt and downstream legal hold or collection — the handoff is still manual for most teams. Exterro Subpoena Manager helps structure that front end. I'll send more detail. Thanks.`,
+    },
+    live:{
+      legalops:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. Subpoena response is one of those workflows that often looks manageable until volume, deadlines, and cross-department follow-up start creating pressure. Are subpoena requests something your team manages centrally today, or are they handled across different groups?`,
+        yes:`That makes sense. Subpoena Manager is designed to help legal operations teams capture requests, extract key details, assign work, track follow-up, and maintain visibility across the response process. Would it make sense to schedule 20 minutes to compare your current process with what Exterro can automate?`,
+        no:`Understood. I'll send over a brief summary in case subpoena response becomes a priority later.`
+      },
+      gc:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I'm reaching out because subpoena response is an area where we're seeing GCs focus on both efficiency and defensibility — making sure the process is documented and auditable, not just functional. Is that a concern for your team today?`,
+        yes:`That's exactly the conversation worth having. Subpoena Manager helps establish a more consistent, governed workflow from intake through response, with a complete audit trail. Would a 20-minute walkthrough be useful?`,
+        no:`Understood. I'll send a brief overview that might be helpful if the timing changes.`
+      },
+      paralegal:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I'm reaching out because a lot of paralegals and legal coordinators we speak with describe the same subpoena intake process — reading the request, entering data in multiple places, figuring out who handles it, and then chasing other departments for responses. Does that sound familiar?`,
+        yes:`That's exactly what Subpoena Manager is built to fix. It handles the capture, extraction, and routing automatically so your team doesn't have to. Would it be worth 20 minutes to see how it works?`,
+        no:`No problem. I'll leave a short summary in case it comes up.`
+      },
+      edisco:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I'm reaching out because one of the most common gaps we hear about from eDiscovery and litigation teams is the handoff between subpoena intake and downstream legal hold or collection — it's still manual for most teams. Is that something you're dealing with?`,
+        yes:`Good to know. Subpoena Manager helps structure the front end of that workflow so the handoff into preservation and collection is cleaner and more defensible. Would a 20-minute walkthrough make sense?`,
+        no:`Understood. I'll send over a brief summary on how Exterro connects the front end to downstream legal workflows.`
+      },
+    }
+  },
+  2:{
+    voicemail:{
+      legalops:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> at Exterro. I wanted to follow up on my note about subpoena intake. For many legal ops teams, the challenge is not just responding to the subpoena — it's organizing the work quickly and defensibly after the request arrives. Exterro Subpoena Manager helps structure that process. I'd welcome a quick conversation.`,
+      gc:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about subpoena response. When multiple departments are involved, it can be hard to demonstrate a consistent, documented process. Subpoena Manager helps establish that structure. Happy to share what it looks like in a quick call.`,
+      paralegal:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about subpoena intake. The part that's hardest to manage manually is often everything that happens after the request arrives — getting the right details, routing it, and following up across departments. Subpoena Manager automates most of that. I'd welcome a quick conversation.`,
+      edisco:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note. For eDiscovery teams, the challenge is often that subpoena intake creates unstructured work before the legal hold or collection process can start. Subpoena Manager helps bridge that gap. I'd be glad to talk.`,
+    },
+    live:{
+      legalops:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I'm following up on my note about subpoena response workflows. A lot of legal ops teams have strong people and strong processes, but the work is still slowed by manual intake, rekeying, and follow-up across departments. How are you currently tracking subpoena status and departmental responses?`,
+        yes:`That's exactly where Subpoena Manager can help. It gives legal operations teams a more structured way to manage requests, tasks, follow-up, and visibility. Would 20 minutes be useful to walk through the workflow?`,
+        no:`No problem. I can send a brief overview for future reference.`
+      },
+      gc:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about subpoena response. From a GC perspective, one of the issues we hear is that when something goes wrong — a missed deadline, a regulatory inquiry — it's hard to demonstrate that the process was consistent and documented. Is defensibility something you think about with subpoena response today?`,
+        yes:`That's a valuable area to address. Subpoena Manager helps establish a more auditable, governed process from intake through response. Would a 20-minute call be useful?`,
+        no:`Understood. I'll leave a brief resource in case the conversation becomes relevant.`
+      },
+      paralegal:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note. For a lot of legal coordinators, the most time-consuming part of subpoena response isn't the legal work — it's the tracking: who has responded, what's missing, which deadlines are coming up. How are you managing that tracking today?`,
+        yes:`That's the workflow Subpoena Manager is built to simplify. It handles capture, routing, and follow-up tracking automatically. Would it be worth 20 minutes to see how it works?`,
+        no:`No problem. I'll send a brief overview.`
+      },
+      edisco:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note. For eDiscovery and litigation teams, we're seeing a lot of focus on how subpoena intake connects to downstream legal hold and collection. Is that handoff something that's structured for your team, or is it still fairly manual?`,
+        yes:`Good to know. That's exactly where Exterro can help. Subpoena Manager structures the front end so the downstream handoff is cleaner. Would a 20-minute walkthrough make sense?`,
+        no:`That's helpful context. I can send a brief overview on how teams connect subpoena intake to broader eDiscovery workflows.`
+      },
+    }
+  },
+  3:{
+    voicemail:{
+      legalops:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about reducing gaps in subpoena response workflows. When multiple departments are involved, it can be hard to track ownership, deadlines, and follow-up manually. Exterro Subpoena Manager helps legal ops teams bring more structure and visibility to that process. I'd be happy to share what that looks like.`,
+      gc:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about subpoena response risk from manual handoffs. When ownership and follow-up aren't tracked in a structured way, it's difficult to demonstrate a defensible process. Subpoena Manager helps solve that. I'd welcome a quick call.`,
+      paralegal:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about subpoena handoffs. The cross-department piece — getting timely responses from HR, Claims, or Compliance — is often the biggest source of delay. Subpoena Manager automates those follow-up notifications. I'd love to show you how.`,
+      edisco:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about visibility gaps in subpoena response. For litigation and eDiscovery teams, the risk is often in the handoffs — between intake and hold, between departments, between subpoena receipt and collection. Subpoena Manager helps structure those transitions. I'd welcome a quick call.`,
+    },
+    live:{
+      legalops:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I wanted to see if subpoena response is an area your team is reviewing this year. We're seeing legal ops teams focus on reducing manual intake, improving response tracking, and connecting subpoena workflows to preservation, collection, review, and production. Is that a priority for <span class="ps-ph">[Company Name]</span>?`,
+        yes:`That's a good fit for a short discussion. Subpoena Manager is designed specifically for this workflow. Would <span class="ps-ph">[day/time]</span> work for 20 minutes?`,
+        no:`Understood. I'll send a short resource you can keep on hand for when it becomes relevant.`
+      },
+      gc:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I wanted to follow up on the note I sent about subpoena response risk. For General Counsel, one of the issues is that when a process relies on manual handoffs and email, it's hard to demonstrate to a regulator or auditor exactly what happened and when. Is that a concern you think about?`,
+        yes:`That's exactly the conversation worth having. Subpoena Manager provides a complete, auditable workflow from intake through response — with human oversight built in. Would a 20-minute call be useful?`,
+        no:`Understood. I'll leave a brief resource on how teams improve subpoena response defensibility.`
+      },
+      paralegal:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I wanted to follow up on my note about the cross-department follow-up problem in subpoena response. The piece that takes the most time manually is usually chasing HR, Claims, or Compliance. How are you currently managing those notifications and reminders?`,
+        yes:`That's the part Subpoena Manager handles automatically. It triggers follow-up notifications so you don't have to track each one manually. Would it be worth 20 minutes to see how it works?`,
+        no:`No problem. I'll send a quick overview of how teams reduce that chasing.`
+      },
+      edisco:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, this is <span class="ps-ph">[Your Name]</span> from Exterro. I'm following up on my note about subpoena handoffs. For eDiscovery and litigation teams, the risk is often in what falls through the gaps — between subpoena receipt and legal hold, between departments, between request and production. Is that something your team runs into?`,
+        yes:`Good to know. Subpoena Manager helps close those gaps with a structured, trackable workflow. Would a 20-minute call make sense?`,
+        no:`Understood. I can send a brief overview on how teams connect subpoena intake to downstream legal workflows.`
+      },
+    }
+  },
+  4:{
+    voicemail:{
+      legalops:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I wanted to highlight one reason Subpoena Manager may be especially relevant for <span class="ps-ph">[Company Name]</span> — it doesn't just help with intake. It connects subpoena response to broader legal workflows like preservation, collection, review, and production. That can help legal ops teams reduce handoff gaps and improve visibility end to end. I'd welcome a quick conversation.`,
+      gc:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up. One reason Exterro may be relevant beyond intake is the connection to downstream eDiscovery work — legal hold, collection, review, and production. For GCs focused on consistent, defensible execution, that platform connection is important. Happy to walk through it.`,
+      paralegal:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about connecting subpoena response to the broader eDiscovery process. One thing that often helps legal coordinators is having the intake workflow connect directly to legal hold and collection — fewer handoffs, less manual re-entry. I'd love to show you how that works.`,
+      edisco:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about subpoena intake connecting to eDiscovery execution. Subpoena Manager helps structure the front end — intake, triage, routing — while the broader Exterro platform supports legal hold, collection, review, and production behind it. I'd welcome a quick call to walk through the connection.`,
+    },
+    live:{
+      legalops:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I'm following up because Subpoena Manager may be especially relevant if your team wants to connect subpoena intake with downstream eDiscovery work. Do subpoenas at <span class="ps-ph">[Company Name]</span> typically require coordination with preservation, collection, review, or production?`,
+        yes:`That's where Exterro can be valuable end-to-end. Subpoena Manager helps initiate and track the request workflow, while the broader Exterro platform supports the execution work behind it. Would it make sense to schedule a short discussion?`,
+        no:`That's helpful. Even when response is lighter, teams often still benefit from better intake, tracking, and reporting. I can send a brief overview.`
+      },
+      gc:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I'm following up on my note about connecting subpoena response to the broader eDiscovery lifecycle. For GCs, one of the risks is that the back end — collection, review, production — is only as defensible as the front end. Does subpoena intake typically trigger downstream work for your team?`,
+        yes:`That's exactly where Exterro's platform creates value. A structured intake workflow feeds a more defensible execution workflow behind it. Would a 20-minute walkthrough be helpful?`,
+        no:`Helpful context. Even when response is lighter, a more structured intake process reduces risk and improves documentation. I can send a brief overview.`
+      },
+      paralegal:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about subpoena intake connecting to eDiscovery work. For legal coordinators, one of the friction points is often the handoff — a subpoena arrives, gets triaged, and then someone has to manually initiate the legal hold or collection process. Is that something you're doing manually today?`,
+        yes:`Subpoena Manager can help automate that connection. When a subpoena is processed, the downstream workflow can trigger automatically. Would it be worth 20 minutes to see how that works?`,
+        no:`Good to know. I can send a brief overview that covers both the intake automation and the downstream connection.`
+      },
+      edisco:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up because I think this is especially relevant for eDiscovery and litigation teams. The most common gap we see is that subpoena intake is still manual, which means legal hold and collection often start with incomplete or inconsistent information. Is that something that creates problems in your workflow?`,
+        yes:`That's exactly where Exterro can help. Subpoena Manager structures the front end so the downstream data is cleaner and more complete. Would a 20-minute walkthrough make sense?`,
+        no:`Helpful context. I can send a brief overview on how teams close that front-end gap.`
+      },
+    }
+  },
+  5:{
+    voicemail:{
+      legalops:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about how Exterro is delivering governed autonomous AI for legal operations — AI that handles the operational work around subpoena response while preserving human oversight where legal judgment matters. I think it's relevant for legal ops teams evaluating how to use AI responsibly. I'd welcome a quick call.`,
+      gc:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about governed AI for subpoena response. For GCs, the question isn't just whether AI is fast — it's whether it's controlled, auditable, and defensible. That's exactly how Subpoena Manager is designed. Happy to walk through it.`,
+      paralegal:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about how Exterro is using AI to speed up the operational work in subpoena response — capture, extraction, routing, follow-up — while keeping your team in control of the decisions that require legal judgment. I'd love to show you how it works.`,
+      edisco:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about governed AI for subpoena response. For eDiscovery and litigation teams, the AI piece is most valuable for structuring intake and routing so the downstream work starts with better data. I'd welcome a quick conversation.`,
+    },
+    live:{
+      legalops:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about governed autonomous AI for legal operations. A lot of legal ops leaders we speak with are interested in AI but want to make sure it fits a controlled, defensible workflow. Is AI adoption something your team is exploring for operational workflows?`,
+        yes:`That's exactly the conversation worth having. Subpoena Manager uses governed AI to handle the operational mechanics — intake, extraction, routing, follow-up — while keeping human oversight in place for legal decisions. Would a 20-minute walkthrough be useful?`,
+        no:`Understood. I can send a brief overview of how teams are using governed AI for legal operations without giving up control.`
+      },
+      gc:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I sent a note about how Exterro approaches AI in legal workflows. For General Counsel, the question that usually comes up is: what does the AI actually control, and what stays with the attorneys? How are you thinking about AI governance for legal operations today?`,
+        yes:`That's exactly the right question. With Subpoena Manager, the AI handles operational work — capture, extraction, routing, follow-up — and human oversight is required for every decision that requires legal judgment. Would a 20-minute walkthrough be helpful?`,
+        no:`Understood. I can send a brief overview on how Exterro approaches AI governance in legal operations.`
+      },
+      paralegal:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about AI for subpoena response. The way Subpoena Manager uses AI is specifically for the operational mechanics — reading and extracting subpoena details, routing, sending follow-up reminders — so that your team's time goes to the work that actually requires your expertise. Does that sound useful?`,
+        yes:`That's what makes it valuable for legal coordinators specifically. Would it be worth 20 minutes to see how it works day-to-day?`,
+        no:`No problem. I can send a brief overview of what the AI handles and what stays with the team.`
+      },
+      edisco:{
+        opener:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Following up on my note about governed AI for subpoena response. For eDiscovery and litigation teams, the AI value is mostly on the intake side — structuring the request automatically so the downstream work starts with clean, complete data. Is that a gap you're trying to address?`,
+        yes:`That's a good fit. Subpoena Manager handles the AI-assisted intake and extraction so your team gets better data going into legal hold and collection. Would a 20-minute call make sense?`,
+        no:`Understood. I can send a brief overview on how AI-assisted intake improves downstream legal workflows.`
+      },
+    }
+  },
+  6:{
+    voicemail:{
+      legalops:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I've reached out a few times and I'll keep it brief — I'm following up one last time on subpoena response automation. If it becomes a priority, I'm easy to reach. I'll send a final note. Thanks.`,
+      gc:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. I'll keep this brief — last follow-up on subpoena response and defensibility. If the timing changes, I'm easy to reach.`,
+      paralegal:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Final follow-up on subpoena intake automation. If reducing manual entry and follow-up chasing becomes a priority, I'm easy to reach. I'll send a short note.`,
+      edisco:`Hi <span class="ps-ph">[First Name]</span>, <span class="ps-ph">[Your Name]</span> from Exterro. Last follow-up on connecting subpoena intake to your downstream legal workflows. If that becomes a priority, I'm easy to reach. I'll send a final note.`,
+    },
+    live:null  // no live script for breakup — just the voicemail
+  }
+};
+
+// LinkedIn messages per touchpoint
+const linkedinMessages = {
+  day3:{
+    connect:`Hi <span class="ph">[First Name]</span>, I work with legal teams looking to improve subpoena intake, routing, and response workflows. Thought it would be helpful to connect.`,
+    note:`Simple connection request — no pitch. The goal is an accepted connection so you can message later in the sequence.`
+  },
+  day8:{
+    message:`Thanks for connecting, <span class="ph">[First Name]</span>. I'm sharing information with legal teams on how to reduce manual subpoena intake and improve visibility from request receipt through response. Happy to send a brief overview if useful.`,
+    note:`Keep it short. Don't pitch on Day 8 — the goal is to stay visible and create an opening, not push for a meeting yet.`
+  },
+  day13:{
+    message:`<span class="ph">[First Name]</span>, one area we're discussing with legal teams is how to manage subpoena response when multiple departments are involved — visibility into who has responded, what is missing, and what is at risk. Worth comparing notes?`,
+    note:`This one has a soft CTA. "Worth comparing notes?" is less aggressive than asking for a meeting. Aim for a reply, not a calendar invite.`
+  },
+  day22:{
+    message:`<span class="ph">[First Name]</span>, one reason Subpoena Manager is resonating with legal teams is that it applies AI to operational work — intake, extraction, routing, follow-up — while preserving human oversight where legal judgment matters. Worth a short conversation?`,
+    note:`Late-sequence LinkedIn touch. If they haven't responded to email, a LinkedIn message at this stage sometimes gets a reply. Keep it conversational, not salesy.`
+  }
+};
+
+// Assets per email
+const assetsPerEmail = {
+  1: ['video','demo','roi'],
+  2: ['video','demo','roi'],
+  3: ['video','demo','roi'],
+  4: ['demo','video','roi'],
+  5: ['demo','video','roi'],
+  6: ['roi','demo','video'],
+};
+
+const allAssets = {
+  blog:{icon:'📝',label:'Blog Post',meta:'Why Subpoena Response Is Ready for Governed Automation',color:'var(--orange)',bg:'var(--orange-lt)',
+    ps:{
+      legalops:'P.S. — I put together a short read on why subpoena response is a strong starting point for legal operations automation: [link]. Addresses the intake, routing, and visibility problems directly.',
+      gc:'P.S. — This post covers why subpoena response is a strong place to start for legal ops modernization: [link]. Focused on control and defensibility.',
+      paralegal:'P.S. — Short read on why intake automation matters for legal teams managing subpoena volume: [link].',
+      edisco:'P.S. — This post covers why subpoena response is a strong starting point for connecting intake to downstream legal workflows: [link].'
+    }},
+  lp:{icon:'🌐',label:'Landing Page',meta:'Exterro Subpoena Manager — what it is, who it is for, why now',color:'var(--purple-md)',bg:'var(--purple-lt)',
+    ps:{
+      legalops:'P.S. — Quick overview page if you want to see what Subpoena Manager does before we talk: [link].',
+      gc:'P.S. — Brief overview of Subpoena Manager if helpful before a conversation: [link].',
+      paralegal:'P.S. — Short overview of how Subpoena Manager works: [link].',
+      edisco:'P.S. — Overview page covering how Subpoena Manager structures intake and connects to downstream eDiscovery workflows: [link].'
+    }},
+  brief:{icon:'📄',label:'Solution Brief',meta:'Exterro Subpoena Manager — 2-page overview',color:'var(--blue)',bg:'rgba(100,173,198,0.1)',
+    ps:{
+      legalops:'P.S. — Attaching a brief overview of Subpoena Manager. Most relevant section for legal ops: the before/after workflow comparison on page 2.',
+      gc:'P.S. — Brief attached. The governance and audit trail section on page 2 is most relevant for GCs evaluating this.',
+      paralegal:'P.S. — Short overview attached — covers what the intake and follow-up automation looks like day-to-day.',
+      edisco:'P.S. — Brief attached. The platform connection section covers how Subpoena Manager integrates with legal hold, collection, review, and production.'
+    }},
+  checklist:{icon:'✅',label:'Pain Checklist',meta:'Subpoena Response Pain Checklist — self-assessment',color:'var(--green)',bg:'rgba(39,174,96,0.08)',
+    ps:{
+      legalops:'P.S. — Attaching a short checklist we use in discovery conversations. Most teams I speak with check 4 or more. Worth a look: [link].',
+      gc:'P.S. — Short checklist on subpoena response risk indicators — useful for a quick self-assessment: [link].',
+      paralegal:'P.S. — Quick checklist that identifies where manual subpoena workflows typically create friction: [link].',
+      edisco:'P.S. — Checklist of common subpoena response gaps that affect downstream legal workflows: [link].'
+    }},
+  infographic:{icon:'🗺️',label:'Workflow Infographic',meta:'"What happens after a subpoena arrives" — visual',color:'var(--orange)',bg:'var(--orange-lt)',
+    ps:{
+      legalops:'P.S. — Attached a quick visual of the subpoena workflow from intake to close — shows where most of the manual time is spent: [link].',
+      gc:'P.S. — Visual attached showing the typical subpoena lifecycle — useful for identifying where process gaps create risk: [link].',
+      paralegal:'P.S. — Quick visual attached showing the typical subpoena workflow and where automation saves the most time: [link].',
+      edisco:'P.S. — Visual of the subpoena lifecycle from intake through production — shows where Exterro connects the front end to downstream execution: [link].'
+    }},
+  workflowmap:{icon:'🔗',label:'Workflow Map',meta:'From subpoena intake to eDiscovery execution',color:'var(--purple-md)',bg:'var(--purple-lt)',
+    ps:{
+      legalops:'P.S. — Attached a workflow map showing how Subpoena Manager connects intake to legal hold, collection, review, and production — useful for understanding the platform value: [link].',
+      gc:'P.S. — Workflow map attached showing the full subpoena lifecycle from intake through production — covers where the governance model applies at each stage: [link].',
+      paralegal:'P.S. — Quick map attached showing how subpoena intake connects to downstream legal workflows: [link].',
+      edisco:'P.S. — Workflow map attached — specifically covers how Subpoena Manager connects to legal hold, collection, review, redaction, production, and closeout in the Exterro platform: [link].'
+    }},
+  faq:{icon:'❓',label:'AI Governance FAQ',meta:'What the AI does. What humans control. What is logged.',color:'var(--blue)',bg:'rgba(100,173,198,0.1)',
+    ps:{
+      legalops:'P.S. — Attaching a short FAQ that addresses the governance questions that come up most often: what does the AI control, what stays with the team, and what is auditable: [link].',
+      gc:'P.S. — FAQ attached on AI governance in Subpoena Manager — covers oversight, auditability, and defensibility directly: [link].',
+      paralegal:'P.S. — Short FAQ on what Subpoena Manager\'s AI actually does and what your team stays in control of: [link].',
+      edisco:'P.S. — FAQ attached on how the AI governance model works in Subpoena Manager, including what is logged and auditable for downstream eDiscovery work: [link].'
+    }},
+  execbrief:{icon:'📋',label:'Executive Brief',meta:'Why legal teams are modernizing subpoena response',color:'var(--purple-md)',bg:'var(--purple-lt)',
+    ps:{
+      legalops:'P.S. — Leaving a brief summary of the business case for subpoena response modernization in case it\'s useful for a future internal conversation: [link].',
+      gc:'P.S. — Leaving an executive summary on why GCs are modernizing subpoena response — covers speed, consistency, defensibility, and cost control: [link].',
+      paralegal:'P.S. — Short executive summary on why legal teams are moving away from manual subpoena workflows: [link].',
+      edisco:'P.S. — Executive brief attached on why legal teams are connecting subpoena response to their broader eDiscovery infrastructure: [link].'
+    }},
+  video:{icon:'▶️',label:'Explainer Video',meta:'90-second walkthrough of Subpoena Manager in action',color:'var(--orange-dk)',bg:'rgba(242,108,56,0.15)',
+    ps:{
+      legalops:'P.S. — 90-second video that shows the end-to-end intake workflow in action — easier than reading about it: [link]. No form gate.',
+      gc:'P.S. — Quick 90-second video showing the governance and oversight model in practice: [link]. Useful before a longer conversation.',
+      paralegal:'P.S. — Short video walkthrough of what intake looks like with Subpoena Manager — under 2 minutes: [link].',
+      edisco:'P.S. — 90-second video showing how Subpoena Manager structures intake and connects to downstream legal hold and collection: [link].'
+    }},
+  demo:{icon:'🖥️',label:'Interactive Demo',meta:'Self-guided product tour — click through at your own pace',color:'var(--purple)',bg:'var(--purple-lt)',
+    ps:{
+      legalops:'P.S. — Built a self-guided interactive demo so you can see Subpoena Manager without scheduling time. Click through at your own pace: [link]. Takes about 4 minutes.',
+      gc:'P.S. — Self-guided demo if you want to see the governance model and audit trail in action before a live conversation: [link]. About 4 minutes.',
+      paralegal:'P.S. — Interactive demo that shows what the intake and follow-up workflow looks like day-to-day: [link]. Takes about 4 minutes — no scheduling needed.',
+      edisco:'P.S. — Self-guided demo showing the intake-to-handoff workflow including the connection to legal hold and collection: [link]. About 4 minutes.'
+    }},
+  roi:{icon:'🧮',label:'ROI Calculator',meta:'Interactive — enter your numbers, see your savings',color:'var(--green)',bg:'rgba(39,174,96,0.1)',
+    ps:{
+      legalops:'P.S. — Built an interactive ROI calculator so you can plug in your actual subpoena volume and see the time and cost recovery: [link]. Most legal ops teams find the number is bigger than they expected.',
+      gc:'P.S. — Interactive calculator if you want to quantify the cost of the current process before a conversation: [link]. Helpful for the budget discussion.',
+      paralegal:'P.S. — Calculator that shows the time recovery from automating intake — useful if you ever need to make the case internally: [link].',
+      edisco:'P.S. — ROI calculator that includes time savings on intake plus the downstream impact of cleaner data going into legal hold: [link].'
+    }},
+};
+
+// Email content
+const emails = {
+  1:{
+    goal:'Start with the pain',
+    day:1, touchNum:1, nextTouch:'Day 2 · Phone Call 1',
+    subjects:[
+      'Is subpoena intake slowing down your legal team?',
+      'A faster way to manage subpoena requests at [Company Name]',
+      'Reducing the manual work behind subpoena response',
+    ],
+    body:{
+      legalops:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Many legal operations teams still manage subpoena intake through email, PDFs, spreadsheets, and manual follow-up across multiple departments. That creates a lot of operational work before legal analysis can even begin: reading the request, extracting key details, creating records, assigning tasks, tracking responses, and reporting on status.</p>
+<p>Exterro Subpoena Manager helps legal ops teams move from subpoena receipt to structured action faster — capturing requests, extracting critical details, routing work, and preserving oversight across the response process.</p>
+<p>Would it be worth a short conversation to compare how <span class="ph">[Company Name]</span> handles subpoena intake today versus what could be automated?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      gc:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Most legal teams have a working subpoena process — but "working" and "auditable" are not always the same thing. When intake relies on email, manual data entry, and informal follow-up across departments, it can be difficult to demonstrate a consistent, documented process if a question ever arises.</p>
+<p>Exterro Subpoena Manager helps General Counsel and legal operations teams establish a more structured, governed workflow — from the moment a request arrives through response — with a complete audit trail and human oversight where legal judgment matters.</p>
+<p>Worth a short conversation to discuss how <span class="ph">[Company Name]</span> approaches subpoena intake and response documentation today?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      paralegal:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>If your team is still managing subpoena intake through shared inboxes, manual data entry, and email chains across HR, Claims, and Compliance — you're probably spending a significant amount of time on work that doesn't require legal expertise. Reading the request, re-entering details, figuring out who handles it, and chasing departments for responses.</p>
+<p>Exterro Subpoena Manager helps legal teams automate the operational parts of subpoena response — capture, extraction, routing, and follow-up — so that your time goes to the work that actually requires your expertise.</p>
+<p>Would it be worth a short conversation about how <span class="ph">[Company Name]</span> manages subpoena intake today?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      edisco:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>For eDiscovery and litigation teams, subpoena response often creates a front-end problem: requests arrive through email or mail, get processed manually, and the structured data needed to trigger legal hold, collection, or review often doesn't exist until someone manually creates it.</p>
+<p>Exterro Subpoena Manager helps bridge that gap — capturing subpoena requests, extracting key details automatically, and creating structured records that connect directly to downstream legal hold, collection, review, and production workflows.</p>
+<p>Would it be worth a short conversation about how subpoena intake connects to your downstream eDiscovery workflows at <span class="ph">[Company Name]</span>?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+    },
+    coaching:{
+      legalops:['Lead with the operational time cost — legal ops leaders respond to efficiency framing','Ask about volume early on the call: "How many subpoenas does your team handle in a typical month?"','The goal of Email 1 is a reply or a call, not a product demo — keep the ask small','Do not open with "governed autonomous AI" — start with the manual intake problem they already feel'],
+      gc:['GCs respond to defensibility and audit trail framing — not operational efficiency','The word "documented" and "auditable" land better than "automated" with this persona','Keep the email short — GCs skim. One-sentence problem, one-sentence solution, one ask','If they respond, prepare to discuss AI governance and human oversight immediately'],
+      paralegal:['Paralegals feel the daily friction most directly — name the specific tasks: re-entering data, chasing HR, tracking deadlines','This is the most operational persona — focus on what their day looks like before and after','Ask on the call: "How much time does your team spend per subpoena on intake and follow-up?" — get them to give you the number','Use relatable language, not product language — "chasing departments" lands better than "triggering cross-departmental workflows"'],
+      edisco:['eDiscovery and litigation managers care about handoff quality, not just intake speed','The key question to surface: how does a subpoena currently trigger a legal hold or collection for your team?','Downstream connection to Exterro\'s platform is your primary differentiator with this persona','Use "front end" and "downstream connection" language — it resonates with how they think about workflows'],
+    }
+  },
+  2:{
+    goal:'Explain the solution',
+    day:5, touchNum:4, nextTouch:'Day 7 · Phone Call 2',
+    subjects:[
+      'What happens after a subpoena arrives?',
+      'Turning subpoena receipt into structured action',
+      'Faster subpoena triage for legal teams',
+    ],
+    body:{
+      legalops:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>One of the biggest challenges in subpoena response is not just receiving the request. It is everything that happens next.</p>
+<p>Legal operations teams need to identify the requesting party, deadlines, custodians, departments involved, data needed, review requirements, and response obligations. When that work happens manually, delays and inconsistencies are hard to avoid.</p>
+<p>Exterro Subpoena Manager helps convert incoming subpoena requests into structured records and actionable workflows so your team can move faster with better visibility. A few areas we help with:</p>
+<ul class="bullet-list">
+  <li>Capture subpoena requests from email, mail, and portals</li>
+  <li>Extract critical details — deadlines, parties, request types, metadata</li>
+  <li>Create structured records and eliminate duplicate entry</li>
+  <li>Route work to the right teams with clear ownership</li>
+  <li>Trigger follow-up across HR, Claims, and Compliance automatically</li>
+  <li>Track status and preserve oversight throughout</li>
+</ul>
+<p>Would you be open to a short conversation next week?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      gc:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>When a subpoena arrives, the legal judgment work — scope, privilege, response strategy — is only possible once the operational work is done: identifying what was received, extracting the key details, assigning responsibility, and initiating the response process.</p>
+<p>For most legal departments, that operational work still happens manually. Which means the people best suited for legal judgment are spending time on intake coordination instead.</p>
+<p>Exterro Subpoena Manager takes the operational work off your team's plate — automated intake, extraction, routing, and follow-up — while preserving attorney oversight where legal judgment matters. The result is a faster process with a more defensible audit trail.</p>
+<p>Would a short conversation make sense to discuss how this applies to your current workflow?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      paralegal:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>The part of subpoena response that takes the most time is usually not the legal work — it is the operational work that has to happen first:</p>
+<ul class="bullet-list">
+  <li>Reading the request and identifying what it is asking for</li>
+  <li>Extracting deadlines, parties, and key details</li>
+  <li>Creating a record and entering it into the right systems</li>
+  <li>Routing it to the right people and confirming ownership</li>
+  <li>Following up with HR, Claims, and Compliance for their part</li>
+  <li>Tracking status until the response is complete</li>
+</ul>
+<p>Exterro Subpoena Manager automates the operational steps so your team can focus on the work that requires your expertise. Each of those steps above can happen automatically from the moment the subpoena arrives.</p>
+<p>Worth a short conversation next week?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      edisco:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>For eDiscovery and litigation teams, subpoena response is often the least structured part of the legal workflow — even when everything downstream is well-organized. The challenge is that intake still happens manually, which means the structured data needed for legal hold, collection, and review starts late and often incomplete.</p>
+<p>Exterro Subpoena Manager helps close that gap. A few areas we address:</p>
+<ul class="bullet-list">
+  <li>Capture subpoena requests automatically from all channels</li>
+  <li>Extract deadlines, parties, and request types — no manual re-entry</li>
+  <li>Create structured records that feed downstream legal workflows</li>
+  <li>Route work and track follow-up with clear ownership</li>
+  <li>Preserve a complete, auditable record from intake through response</li>
+</ul>
+<p>Would you be open to a short conversation about how this connects to your current eDiscovery workflow?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+    },
+    coaching:{
+      legalops:['The bullet list works well here — it maps directly to the pain points they described','Use the call to reference a specific bullet: "Which of those six steps takes the most time for your team?"','Solution Brief is the right asset for Email 2 — they know the problem, now they need the details','Do not ask for a demo yet — ask for a "short conversation to compare your current process"'],
+      gc:['The "operational work before legal judgment" framing resonates strongly with GCs','Phrase your CTA around their time: "20 minutes to compare your current process" — not "a product demo"','On the call, ask: "How do you currently ensure the intake process is documented if something is ever questioned?"','Audit trail and defensibility are your best angles — lean into them'],
+      paralegal:['The bulleted before/after list is specifically designed for this persona — they live in this list','On the call, ask: "Which step in that list takes the most time for you?" — get them to confirm the pain','Paralegals often have influence but not budget authority — ask "Who else would be involved in evaluating something like this?"','Use relatable, non-technical language — "following up with HR" not "triggering cross-departmental notifications"'],
+      edisco:['The "incomplete data going into legal hold" framing is specific to this persona — use it','On the call, ask: "When a subpoena triggers a legal hold, what does that handoff look like today?"','The platform connection is your primary differentiator with eDiscovery managers — start building that story here','Ask about current eDiscovery tools — Exterro may already be part of their stack downstream'],
+    }
+  },
+  3:{
+    goal:'Shift from pain to risk',
+    day:10, touchNum:7, nextTouch:'Day 12 · Phone Call 3',
+    subjects:[
+      'Subpoena response risk often starts with handoffs',
+      'Reducing gaps in subpoena response workflows',
+      'Better visibility across subpoena response',
+    ],
+    body:{
+      legalops:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Subpoena response often involves legal, HR, claims, compliance, IT, records, and other internal teams. When requests are routed through email and tracked in spreadsheets, it can be difficult to know:</p>
+<ul class="bullet-list">
+  <li>Who owns the next step</li>
+  <li>Which departments have responded</li>
+  <li>What information is still missing</li>
+  <li>Whether deadlines are at risk</li>
+  <li>What has been preserved, collected, reviewed, or produced</li>
+</ul>
+<p>Exterro Subpoena Manager helps legal operations teams manage these handoffs through a more structured, trackable workflow. The goal is not just faster response — it is better control, clearer accountability, and a more defensible process.</p>
+<p>Would it make sense to schedule a quick discussion?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      gc:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>The risk in subpoena response often is not visible until something goes wrong: a missed deadline, an incomplete response, a regulatory inquiry that requires reconstructing a process that was never formally documented.</p>
+<p>When intake relies on email, routing relies on informal communication, and follow-up relies on individual memory, that risk is always present — it just doesn't always surface.</p>
+<p>Exterro Subpoena Manager helps General Counsel and legal operations teams replace that informal process with a governed, documented workflow — so that when a question arises, the audit trail is complete and the process was consistent.</p>
+<p>Would a 20-minute conversation make sense to discuss how <span class="ph">[Company Name]</span> approaches response accountability today?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      paralegal:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>One of the most common frustrations in subpoena response is cross-department follow-up. You send the request to HR, Claims, or Compliance — and then you wait. And follow up. And wait again.</p>
+<p>When that process depends on personal reminders and email chains, requests can stall without anyone realizing it until a deadline is close.</p>
+<p>Exterro Subpoena Manager handles cross-department follow-up automatically. Notifications go out when responses are needed. Status is tracked in one place. You can see what is outstanding without sending another email.</p>
+<p>Would it make sense to schedule a quick conversation about how your team currently manages that follow-up process?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      edisco:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>For eDiscovery and litigation teams, the risk in subpoena response often lives in the gaps between steps: between receipt and routing, between routing and departmental response, between intake and preservation.</p>
+<p>When each handoff depends on manual coordination, those gaps are hard to see until something goes wrong. A missed custodian. An incomplete hold. A response that should have been more defensible.</p>
+<p>Exterro Subpoena Manager helps structure those handoffs with a trackable, auditable workflow — so the front end of subpoena response is as defensible as the eDiscovery execution behind it.</p>
+<p>Would a short conversation make sense to discuss how subpoena intake connects to your current preservation and collection workflow?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+    },
+    coaching:{
+      legalops:['The five-bullet visibility checklist is a discovery tool — use it on the call: "Of these five, which is hardest to answer right now?"','Risk frame lands better than efficiency frame with more senior legal ops leaders','On the call: "If you had to pull a status report on all open subpoenas right now, how long would that take?" — great pain question','If they have a recent near-miss or missed deadline, that is your strongest buying signal — probe gently'],
+      gc:['This email is specifically designed for GC risk framing — "not visible until something goes wrong" is intentional language',"Don't over-explain the product — one sentence on Subpoena Manager is enough here, the risk framing does the work",'On the call: "Has there been a situation where you needed to demonstrate your subpoena response process to a regulator or auditor?"','Defensibility is their primary concern — make sure every touchpoint reinforces that Exterro was designed for it'],
+      paralegal:['Cross-department follow-up is the most specific and relatable pain for paralegals in this sequence','On the call: "How many follow-up reminders do you typically have to send per subpoena?" — helps quantify the time cost','This email is short intentionally — paralegals respond to concise, practical emails','Ask: "If follow-up was automatic, what would you do with that time?" — plants the value seed'],
+      edisco:['eDiscovery managers think in terms of gaps and handoffs — this email uses their language intentionally','The "front end as defensible as downstream execution" framing is specific to this persona — use it on the call','Ask: "When a subpoena triggers a hold, how confident are you that the intake record captures everything the downstream team needs?"','If they\'re already using Exterro downstream, the platform connection story is even stronger — ask about their current stack'],
+    }
+  },
+  4:{
+    goal:'Connect to broader platform value',
+    day:15, touchNum:10, nextTouch:'Day 17 · Phone Call 4',
+    subjects:[
+      'Subpoena intake is only the first step',
+      'Connecting subpoena response to preservation and collection',
+      'From subpoena request to defensible response',
+    ],
+    body:{
+      legalops:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Subpoena management does not end with intake. Once the request is validated, legal teams may need to:</p>
+<ul class="bullet-list">
+  <li>Preserve relevant information and identify custodians</li>
+  <li>Collect documents and data</li>
+  <li>Review responsive materials and redact sensitive information</li>
+  <li>Produce materials and close the loop</li>
+</ul>
+<p>That is where Exterro's broader platform creates value for legal operations teams. Subpoena Manager helps structure the front end of the process. Exterro eDiscovery helps support the execution behind it — including legal hold, data collection, review, redaction, and production.</p>
+<p>Together, the workflow helps legal operations teams move from request receipt to response with greater speed, consistency, and defensibility.</p>
+<p>Would a short walkthrough of the end-to-end workflow be helpful?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      gc:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>A defensible subpoena response is not just a well-documented intake. It is a consistent, auditable process from the moment the request arrives through the final production — including how preservation was initiated, what was collected, how review was managed, and what was ultimately produced.</p>
+<p>Exterro's platform connects all of that. Subpoena Manager structures the front end — intake, extraction, routing, oversight. Exterro eDiscovery supports the execution behind it — legal hold, collection, review, redaction, production.</p>
+<p>For General Counsel looking for a more defensible end-to-end process, the platform connection is the part that matters most.</p>
+<p>Would a short discussion of how that applies to <span class="ph">[Company Name]</span> be worth 20 minutes?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      paralegal:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>One thing that often surprises legal teams is that Subpoena Manager is not a standalone intake tool — it connects directly to the broader Exterro platform.</p>
+<p>That means when a subpoena requires preservation, collection, or review, the structured intake record from Subpoena Manager can flow directly into those downstream workflows. Less re-entry. Fewer handoff gaps. A cleaner process from start to finish.</p>
+<p>For legal coordinators who handle both the intake side and the eDiscovery coordination, that connection can save significant time.</p>
+<p>Would it be worth a quick conversation to walk through how the end-to-end workflow fits your team's process?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      edisco:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Most eDiscovery platforms are well-structured once a matter is open. The gap is usually earlier — in how the triggering event (a subpoena, a litigation hold, a regulatory inquiry) gets structured and handed off to the eDiscovery workflow.</p>
+<p>Exterro Subpoena Manager is designed to close that gap. It structures subpoena intake, triage, and routing — and connects that structured data directly to Exterro's legal hold, collection, review, redaction, and production workflows.</p>
+<p>For eDiscovery and litigation teams already on Exterro, it is the front end that has been missing. For teams evaluating a broader platform, it is the piece that makes the end-to-end workflow defensible.</p>
+<p>Would a 20-minute walkthrough of the full workflow make sense?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+    },
+    coaching:{
+      legalops:['This is where you introduce the broader Exterro platform story — don\'t force it, use it as a differentiator','On the call: "Do subpoenas at [Company] typically require your team to initiate preservation or collection?" — opens the platform conversation','The workflow map is the right asset here — it visually shows how the front end connects to downstream execution','If they\'re already using Exterro downstream, this is a slam dunk — ask about their current platform in discovery'],
+      gc:['GCs want defensibility end to end — the "from receipt to production" framing lands well','Ask on the call: "If a regulator asked you to walk through how a specific subpoena was handled from receipt to production, how confident are you in that audit trail today?"','Workflow map asset is especially compelling for GCs who need to see the governance model end to end','This is the email where you can begin introducing the idea of a technical walkthrough — not just a conversation'],
+      paralegal:['The "less re-entry" framing is specific to paralegals — it speaks directly to their daily workflow','Paralegals who handle both intake and eDiscovery coordination are your warmest leads at this stage','Ask on the call: "Is there currently a manual step between subpoena intake and initiating a legal hold?" — if yes, that\'s a strong platform argument','This persona may need to loop in their manager or GC before a decision — ask "Who else would be involved if this moved forward?"'],
+      edisco:['The "gap before the matter is open" framing is very specific to eDiscovery managers — it describes their lived experience','Ask on the call: "When a subpoena comes in, how long does it typically take before a legal hold is initiated?" — time that gap','If they\'re already on Exterro downstream, the meeting is essentially already set — just show them Subpoena Manager','If they\'re not on Exterro, this is a platform expansion opportunity — be prepared to talk about the full eDiscovery suite'],
+    }
+  },
+  5:{
+    goal:'Build confidence in governed AI',
+    day:19, touchNum:12, nextTouch:'Day 22 · LinkedIn Message',
+    subjects:[
+      'Governed AI for subpoena response',
+      'AI that supports subpoena workflows without losing control',
+      'Faster subpoena response with human oversight',
+    ],
+    body:{
+      legalops:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Legal operations teams are interested in AI, but subpoena response requires more than speed. It requires control, oversight, auditability, and defensibility.</p>
+<div class="trigger-note-line"><span class="tn-label">⚡ Personalize this line</span>If you know they've mentioned AI or automation interest, reference it: <em>"Given what you mentioned about [workflow modernization / AI adoption / process efficiency], this may be particularly relevant."</em></div>
+<p>With Subpoena Manager, Exterro begins delivering governed autonomous AI for legal operations: AI that helps capture requests, extract critical details, create structured records, route work, trigger follow-up, and preserve human oversight where legal judgment matters.</p>
+<p>That means operational steps can move faster while legal operations teams remain in control of decisions that require judgment.</p>
+<p>Would you be open to seeing how this applies to subpoena response at <span class="ph">[Company Name]</span>?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      gc:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Legal teams are increasingly open to AI — but General Counsel need to know exactly where the line is: what does the AI control, and what stays with the attorneys?</p>
+<p>With Subpoena Manager, the answer is straightforward. The AI handles the operational mechanics — capture, extraction, routing, follow-up, and documentation. Attorneys and legal operations leaders remain in control of every decision that requires legal judgment — scope, privilege, collection authorization, production.</p>
+<p>That governance model is not an add-on. It is by design. And it means the process is both faster and more defensible, not one at the expense of the other.</p>
+<p>Would a 20-minute discussion of how the governance model works be useful?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      paralegal:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>One concern that comes up with legal teams when we discuss AI is: what does the AI actually control, and what stays with the team?</p>
+<p>With Subpoena Manager, the AI handles the operational steps — reading and extracting subpoena details, creating structured records, routing work, and triggering follow-up reminders. Your team stays in control of the decisions that require legal expertise: scope, privilege, approvals, and production decisions.</p>
+<p>In practice, that means the work that doesn't require your expertise gets done automatically — and you focus on the work that does.</p>
+<p>Would it be worth a 20-minute conversation to see how that works in practice?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      edisco:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>For eDiscovery and litigation teams, the AI question in subpoena response is usually: can it structure the intake data well enough that downstream legal hold, collection, and review workflows start with complete, reliable information?</p>
+<p>With Subpoena Manager, the answer is yes — and it is governed. The AI captures requests, extracts deadlines, parties, and request types, creates structured records, and routes work automatically. Human oversight is required before any consequential legal action begins. The audit trail is complete from intake through response.</p>
+<p>That means better front-end data for downstream execution — and a more defensible process end to end.</p>
+<p>Would a 20-minute walkthrough be useful?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+    },
+    coaching:{
+      legalops:['Use the trigger personalization note if you have any context from earlier in the sequence — it doubles response rate','On the call: "How is your team currently thinking about AI for legal operations workflows?" — open-ended, not leading','The AI governance FAQ is the right asset here — it directly addresses "what does the AI control" in writing','Do not claim AgentMode is broadly available — frame Subpoena Manager as the first live expression of the governed AI model'],
+      gc:['GCs respond to the "by design" framing — governance built in, not bolted on','The key message: faster AND more defensible, not one at the expense of the other','On the call: "When you evaluate AI for legal operations, what\'s the first governance question you ask?" — let them tell you what matters','The AI Governance FAQ is critical for GCs — offer it proactively, it removes the most common objections before they come up'],
+      paralegal:['Reframe AI for paralegals as "AI handles the parts that don\'t require your expertise" — that\'s reassuring, not threatening','On the call: "What would you do with the time you currently spend on manual intake and follow-up?" — plants the value seed','Paralegals are often the first to surface AI concerns to their manager — address the "does this replace my job" concern directly','The AI FAQ asset is also useful for paralegals — helps them explain the governance model to others internally'],
+      edisco:['eDiscovery managers are the most technically sophisticated persona — they want specifics on what the AI extracts and how','On the call: "If the intake data coming into your legal hold was already structured and complete, how would that change your process?" — strong question','The AI FAQ is useful here, but the workflow map showing the AI extraction feeding downstream is more visual and compelling','Ask: "What does your current audit trail look like from subpoena receipt to production?" — that question sets up the defensibility conversation'],
+    }
+  },
+  6:{
+    goal:'Final conversion or future pipeline',
+    day:25, touchNum:14, nextTouch:'—',
+    subjects:[
+      'Should I close the loop?',
+      'Is subpoena response a priority for [Company Name]?',
+      'Last note on Subpoena Manager',
+    ],
+    body:{
+      legalops:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>I know subpoena response may not be the top priority today, so I'll close the loop for now.</p>
+<p>The reason I reached out is that many legal operations teams are looking for a better way to manage subpoena intake, routing, follow-up, and response visibility without relying on manual tracking across email, spreadsheets, and disconnected tools.</p>
+<p>Exterro Subpoena Manager helps legal teams move from request receipt to structured action faster, with governed workflows and human oversight where legal judgment matters.</p>
+<p>If improving subpoena response is on the roadmap for <span class="ph">[Company Name]</span>, would it make sense to schedule a brief conversation before I close this out?</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      gc:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>I've reached out a few times and won't keep filling up your inbox after this.</p>
+<p>I'll leave it with one thought: the next time a question arises about how a specific subpoena was handled — who received it, what was done, when, and by whom — the answer is only as good as the process you had in place at the time.</p>
+<p>If making that process more consistent and defensible is something on the list for <span class="ph">[Company Name]</span>, I'm easy to reach. And if the timing genuinely isn't right — a one-line reply is all I need.</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      paralegal:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Last note from me — I don't want to keep filling up your inbox.</p>
+<p>I've been reaching out because a lot of legal coordinators and paralegals I speak with describe the same situation: subpoena intake is still manual, cross-department follow-up is still a chasing exercise, and the time spent on that work adds up quickly.</p>
+<p>If that resonates and subpoena response automation becomes a priority, I'm easy to reach. And if the timing is just off right now — a quick "try me in Q<span class="ph">[X]</span>" is all I need.</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+      edisco:`<p>Hi <span class="ph">[First Name]</span>,</p>
+<p>Last note from me — I'll stop after this one.</p>
+<p>I'll leave it with this: the next time a subpoena triggers a legal hold or collection and the intake record is incomplete, inconsistent, or hard to trace — that's the moment this conversation becomes urgent.</p>
+<p>If connecting subpoena intake to your downstream legal workflow is on the list for <span class="ph">[Company Name]</span>, I'm easy to reach. If the timing is off — "try me in Q<span class="ph">[X]</span>" is a perfectly good answer.</p>
+<p class="sig">Best,<br><strong><span class="ph">[Your Name]</span></strong><br>Business Development, Exterro · <span class="ph">[Phone]</span></p>`,
+    },
+    coaching:{
+      legalops:['The breakup email gets the highest reply rate in the sequence — do not soften it and do not skip it','Keep the email under 150 words — the constraint is the point','The executive brief is the right leave-behind — if they share it internally, it does the selling for you','If they reply "not right now," ask for a specific timeframe: "Is Q[X] a better time to reconnect?"'],
+      gc:['The "one thought" structure lands with GCs — it respects their time and re-plants a specific risk concern','Do not repeat the product pitch in the breakup email — just re-state the one risk and let it sit','Executive brief is the right leave-behind — it is the format GCs share internally to start a conversation','If no reply after this email, re-add to sequence in 60 days with a new trigger (news, case, regulation)'],
+      paralegal:['The "try me in Q[X]" line works well for paralegals — it often surfaces people who are interested but waiting for budget or timing','Keep it very short — two paragraphs maximum','Exec brief as leave-behind gives them something to show their manager if they want to escalate','If they reply with any engagement at all, re-qualify: "What would need to change for this to become a priority?"'],
+      edisco:['The "next time a hold is triggered from an incomplete intake" framing is specific and plants a future concern','This persona often replies to the breakup email more than earlier touches — they are busy, not uninterested','Executive brief as leave-behind — if they share with GC or Legal Ops, that creates a warmer re-entry','Re-add to nurture sequence in 60 days with a content touch (no ask) — they just need more time'],
+    }
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════════════════════ */
+let cE = 1, cP = 'legalops', cA = 'blog', cPhoneOpen = false;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RENDER FUNCTIONS
+═══════════════════════════════════════════════════════════════════════════ */
+function render() {
+  const em = emails[cE];
+  const personaName = personaLabels[cP];
+
+  // Filename label
+  const emailNames = ['','intake_pain','intake_to_action','handoff_risk','ediscovery_connect','governed_ai','breakup'];
+  document.getElementById('ct-label').textContent = `email_0${cE}_${cP.toLowerCase()}_${emailNames[cE]}.txt`;
+
+  // Channel badge bar
+  document.getElementById('ch-goal-text').textContent = `Day ${em.day} · Goal: ${em.goal}`;
+
+  // Email subject (primary)
+  document.getElementById('email-subject').textContent = em.subjects[0];
+
+  // Email body
+  document.getElementById('email-body').innerHTML = em.body[cP];
+
+  // Timing sidebar
+  document.getElementById('tp-day').textContent = `Day ${em.day}`;
+  document.getElementById('tp-num').textContent = `${em.touchNum} of 14`;
+  document.getElementById('tp-channel').textContent = 'Email';
+  document.getElementById('tp-goal').textContent = em.goal;
+  document.getElementById('tp-next').textContent = em.nextTouch;
+
+  // Coaching
+  document.getElementById('coaching-title').textContent = `BDR Coaching Notes — ${personaName}`;
+  document.getElementById('coaching-list').innerHTML = em.coaching[cP].map(c => `<li>${c}</li>`).join('');
+
+  // Buying signals
+  const sigs = buyingSignals[cP];
+  document.getElementById('signal-grid').innerHTML = sigs.map(s => `
+    <div class="signal-item" onclick="toggleSig(this)">
+      <span class="si-icon">${s.icon}</span>
+      <span>${s.text}</span>
+      <div class="si-chk"></div>
+    </div>`).join('');
+
+  // Subject lines
+  renderSubjects();
+
+  // Assets
+  renderAssets();
+
+  // Phone script
+  renderPhone();
+
+  // LinkedIn
+  renderLinkedIn();
+
+  // Full timeline
+  renderTimeline();
+
+  // Reset copy button
+  const btn = document.getElementById('copy-btn');
+  btn.classList.remove('copied');
+  btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="4" y="4" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 8V1h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Copy Email';
+}
+
+function renderSubjects() {
+  const em = emails[cE];
+  document.getElementById('subj-list').innerHTML = em.subjects.map((s, i) => `
+    <div class="subj-item${i===0?' active':''}" onclick="selectSubject(this, '${s.replace(/'/g,"\\'")}')">
+      <span class="subj-text">${s}</span>
+      <button class="subj-copy-btn" onclick="event.stopPropagation();copyText('${s.replace(/'/g,"\\'")}','Subject line copied')">Copy</button>
+    </div>`).join('');
+}
+
+function renderAssets() {
+  const available = assetsPerEmail[cE];
+  if (!available.includes(cA)) cA = available[0];
+
+  document.getElementById('asset-count-hint').textContent =
+    `${available.length} options available — click to switch`;
+
+  document.getElementById('asset-selector').innerHTML = available.map(k => {
+    const a = allAssets[k];
+    return `<button class="asset-opt${k===cA?' active':''}" onclick="setAsset('${k}',this)" title="${a.meta}">
+      <span style="margin-right:5px">${a.icon}</span>${a.label}
+    </button>`;
+  }).join('');
+  renderAssetPreview();
+}
+
+function renderAssetPreview() {
+  const a = allAssets[cA];
+  document.getElementById('asset-preview').innerHTML = `
+    <div class="ap-row">
+      <div class="ap-icon-box" style="background:${a.bg}"><span>${a.icon}</span></div>
+      <div>
+        <div class="ap-name" style="color:${a.color}">${a.label}</div>
+        <div class="ap-meta">${a.meta}</div>
+      </div>
+      <button class="ap-btn" onclick="copyText(allAssets['${cA}'].ps['${cP}'].replace(/<[^>]+>/g,''),'Asset P.S. copied')">Copy P.S.</button>
+    </div>
+    <div class="asset-ps"><span class="aps-label">P.S. Line — append to email</span>${a.ps[cP]}</div>`;
+}
+
+function renderPhone() {
+  const ps = phoneScripts[cE];
+  const psToggle = document.getElementById('ps-toggle');
+  const psBody = document.getElementById('ps-body');
+  const psLabel = document.getElementById('ps-toggle-label');
+
+  if (!ps) {
+    document.getElementById('phone-script-wrap').style.display = 'none';
+    return;
+  }
+  document.getElementById('phone-script-wrap').style.display = 'block';
+
+  const voicemail = ps.voicemail[cP];
+  const live = ps.live ? ps.live[cP] : null;
+
+  let html = `<div class="ps-section">
+    <div class="ps-section-label">📞 Voicemail Script</div>
+    <div class="ps-text">${voicemail}</div>
+  </div>`;
+
+  if (live) {
+    html += `<div class="ps-section">
+      <div class="ps-section-label">🎤 Live Call Opener</div>
+      <div class="ps-text">${live.opener}</div>
+      <div class="ps-if yes"><span class="ps-if-label">✓ If interested / engaged</span>${live.yes}</div>
+      <div class="ps-if no"><span class="ps-if-label">✗ If not interested</span>${live.no}</div>
+    </div>`;
+  }
+
+  const emailNum = cE;
+  const nextCallNum = [1,1,2,3,3,4,4][emailNum] || 1;
+  psLabel.textContent = `Phone Script — Call ${nextCallNum}`;
+
+  psBody.innerHTML = html;
+  if (cPhoneOpen) {
+    psBody.classList.add('open');
+    psToggle.classList.add('open');
+  }
+}
+
+function renderLinkedIn() {
+  const liWrap = document.getElementById('li-wrap');
+  const liBody = document.getElementById('li-body');
+  const liHdr  = document.getElementById('li-header-label');
+
+  // Show LinkedIn panel for email steps that follow LinkedIn days
+  // E1 = Day1 (LinkedIn Day 3 follows), E2 = Day5 (LinkedIn Day 8 follows), E3 = Day10 (Day13 follows), E5 = Day19 (Day22 follows)
+  const liMap = {1:'day3', 2:'day8', 3:'day13', 5:'day22'};
+  const dayKey = liMap[cE];
+
+  if (!dayKey) {
+    liWrap.style.display = 'none';
+    return;
+  }
+
+  const li = linkedinMessages[dayKey];
+  liWrap.style.display = 'block';
+
+  const dayLabels = {day3:'Day 3 · Connection Request',day8:'Day 8 · LinkedIn Message',day13:'Day 13 · LinkedIn Message',day22:'Day 22 · LinkedIn Message'};
+  liHdr.textContent = dayLabels[dayKey];
+
+  liBody.innerHTML = `<div>${li.message}</div><div class="li-note">📌 BDR Note: ${li.note}</div>`;
+}
+
+function renderTimeline() {
+  const track = document.getElementById('ft-track');
+  track.innerHTML = allTouches.map((t, i) => {
+    const isActive = t.email && t.email === cE;
+    const icon = chIcons[t.ch];
+    const dayLabel = `Day ${t.day}`;
+    return `
+      <div class="ft-touch${isActive?' active':''}" onclick="${t.email?`setEmailFromTimeline(${t.email})`:'void(0)'}" title="${t.title}">
+        <div class="ft-day">${dayLabel}</div>
+        <div class="ft-ch-icon">${icon}</div>
+        <div class="ft-num">${t.label}</div>
+      </div>
+      ${i < allTouches.length-1 ? '<div class="ft-connector">·</div>' : ''}`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INTERACTION HANDLERS
+═══════════════════════════════════════════════════════════════════════════ */
+function setEmail(n, el) {
+  cE = n;
+  cPhoneOpen = false;
+  document.querySelectorAll('.seq-tab').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function setEmailFromTimeline(n) {
+  cE = n;
+  cPhoneOpen = false;
+  document.querySelectorAll('.seq-tab').forEach((s, i) => {
+    s.classList.toggle('active', i === n-1);
+  });
+  render();
+  document.querySelector('.seq-tabs').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function setPersona(p, el) {
+  cP = p;
+  document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function setAsset(a, el) {
+  cA = a;
+  document.querySelectorAll('.asset-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  renderAssetPreview();
+}
+
+function selectSubject(el, subj) {
+  document.querySelectorAll('.subj-item').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('email-subject').textContent = subj;
+}
+
+function togglePhone() {
+  const body   = document.getElementById('ps-body');
+  const toggle = document.getElementById('ps-toggle');
+  cPhoneOpen = !cPhoneOpen;
+  body.classList.toggle('open', cPhoneOpen);
+  toggle.classList.toggle('open', cPhoneOpen);
+}
+
+function toggleSig(el) {
+  el.classList.toggle('checked');
+  el.querySelector('.si-chk').textContent = el.classList.contains('checked') ? '✓' : '';
+}
+
+function copyEmail() {
+  const subject = document.getElementById('email-subject').textContent;
+  const bodyEl  = document.getElementById('email-body').cloneNode(true);
+  bodyEl.querySelectorAll('.ph,.emb-ph,.trigger-note-line').forEach(n => {
+    const txt = n.classList.contains('trigger-note-line') ? '' : n.textContent;
+    n.parentNode.replaceChild(document.createTextNode(txt), n);
+  });
+  const assetPs = allAssets[cA].ps[cP].replace(/<[^>]+>/g, '');
+  const plain = `Subject: ${subject}\n\n${(bodyEl.innerText||bodyEl.textContent).trim()}\n\n${assetPs}`;
+  navigator.clipboard.writeText(plain).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied';
+    showToast('Email + P.S. copied to clipboard');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="4" y="4" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 8V1h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Copy Email';
+    }, 3000);
+  });
+}
+
+function copyText(text, msg) {
+  navigator.clipboard.writeText(text).then(() => showToast(msg || 'Copied'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓  ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// Init
+render();
+</script>
+</body>
+</html>

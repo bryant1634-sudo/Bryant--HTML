@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subpoena Manager Sales Learning Guide | Exterro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOKENS & RESET
+═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --orange:      #F26C38;
+  --orange-dk:   #C8541E;
+  --orange-lt:   rgba(242,108,56,0.12);
+  --orange-xl:   rgba(242,108,56,0.06);
+  --purple:      #4B2D6E;
+  --purple-dk:   #3A2155;
+  --purple-md:   #5C3A85;
+  --purple-lt:   rgba(75,45,110,0.10);
+  --purple-xl:   rgba(75,45,110,0.05);
+  --charcoal:    #323132;
+  --silver:      #6D6E70;
+  --mid:         #E2E3E5;
+  --lt:          #F1F1F2;
+  --off:         #F7F6F9;
+  --white:       #FFFFFF;
+  --green:       #27AE60;
+  --green-lt:    rgba(39,174,96,0.10);
+  --red:         #E74C3C;
+  --red-lt:      rgba(231,76,60,0.09);
+  --blue:        #64ADC6;
+  --blue-lt:     rgba(100,173,198,0.12);
+  --r:           10px;
+  --r-sm:        7px;
+  --sh:          0 2px 10px rgba(58,33,85,0.08);
+  --sh-md:       0 6px 24px rgba(58,33,85,0.12);
+  --sh-lg:       0 16px 48px rgba(58,33,85,0.16);
+  --t:           0.22s cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Lato',sans-serif;background:var(--off);color:var(--charcoal);line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font-family:'Lato',sans-serif;cursor:pointer;border:none;outline:none}
+a{color:inherit;text-decoration:none}
+input,textarea{font-family:'Lato',sans-serif}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIDEBAR NAV
+═══════════════════════════════════════════════════════════════════════════ */
+.sidebar{
+  position:fixed;top:0;left:0;width:260px;height:100vh;
+  background:var(--purple-dk);overflow-y:auto;z-index:100;
+  display:flex;flex-direction:column;
+  box-shadow:4px 0 24px rgba(0,0,0,0.18);
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+
+.sb-brand{padding:24px 22px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sb-logo{font-size:20px;font-weight:900;color:var(--white);letter-spacing:-.3px;margin-bottom:4px}
+.sb-logo .x{color:var(--orange)}
+.sb-tag{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.38)}
+
+.sb-progress-wrap{padding:14px 22px 12px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sp-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;display:flex;justify-content:space-between}
+.sp-label span{color:var(--orange)}
+.sp-track{height:5px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--orange),#FF8A5C);border-radius:10px;transition:width .4s ease}
+
+.sb-nav{flex:1;padding:16px 0}
+.sb-section-hdr{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:10px 22px 6px;margin-top:6px}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:9px 22px;
+  font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.55);
+  cursor:pointer;border-left:3px solid transparent;transition:all var(--t);
+  position:relative;
+}
+.sb-item:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.05)}
+.sb-item.active{color:var(--white);border-left-color:var(--orange);background:rgba(242,108,56,0.12)}
+.sb-item .sb-num{
+  width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;transition:all var(--t);
+}
+.sb-item.active .sb-num{background:var(--orange);color:var(--white)}
+.sb-item.done .sb-num{background:var(--green);color:var(--white)}
+.sb-item.done{color:rgba(255,255,255,0.45)}
+.sb-item .sb-check{position:absolute;right:14px;color:var(--green);font-size:11px;display:none}
+.sb-item.done .sb-check{display:block}
+
+.sb-footer{padding:16px 22px;border-top:1px solid rgba(255,255,255,0.08)}
+.sb-footer-txt{font-size:10px;color:rgba(255,255,255,0.3);line-height:1.5}
+.sb-footer-txt strong{color:rgba(255,255,255,0.55)}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN CONTENT AREA
+═══════════════════════════════════════════════════════════════════════════ */
+.main{margin-left:260px;min-height:100vh}
+
+/* ── Top bar ────────────────────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(247,246,249,0.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--mid);padding:0 48px;
+  height:54px;display:flex;align-items:center;justify-content:space-between;
+}
+.tb-path{font-size:12px;color:var(--silver);display:flex;align-items:center;gap:6px}
+.tb-path .cur{color:var(--orange);font-weight:700}
+.tb-path .sep{color:var(--mid)}
+.tb-actions{display:flex;gap:8px;align-items:center}
+.tb-btn{
+  padding:6px 14px;border-radius:20px;font-size:11.5px;font-weight:700;
+  background:var(--white);border:1.5px solid var(--mid);color:var(--silver);
+  transition:all var(--t);display:flex;align-items:center;gap:5px;
+}
+.tb-btn:hover{border-color:var(--orange);color:var(--orange)}
+.tb-btn.primary{background:var(--orange);border-color:var(--orange);color:var(--white)}
+.tb-btn.primary:hover{background:var(--orange-dk)}
+
+/* ── Module container ───────────────────────────────────────────────────── */
+.module{display:none;padding:48px 48px 80px;max-width:1020px}
+.module.active{display:block}
+@keyframes modIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.module.active{animation:modIn .35s ease both}
+
+/* ══ MODULE HEADER ══════════════════════════════════════════════════════ */
+.mod-eyebrow{font-size:9.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--orange);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.mod-eyebrow::after{content:'';flex:1;height:1px;background:var(--mid);max-width:60px}
+.mod-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3.5vw,40px);font-weight:800;color:var(--purple-dk);line-height:1.15;margin-bottom:12px}
+.mod-title em{font-style:italic;color:var(--orange)}
+.mod-lead{font-size:16px;color:var(--silver);line-height:1.7;max-width:720px;margin-bottom:36px;padding-bottom:28px;border-bottom:2px solid var(--mid)}
+.mod-lead strong{color:var(--charcoal);font-weight:700}
+
+/* ══ CONTENT COMPONENTS ════════════════════════════════════════════════ */
+
+/* Section heading */
+.sec-hdr{margin:36px 0 18px}
+.sec-hdr h2{font-size:20px;font-weight:900;color:var(--purple);margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.sec-hdr h2::before{content:'';width:4px;height:20px;background:var(--orange);border-radius:2px;flex-shrink:0}
+.sec-hdr p{font-size:13.5px;color:var(--silver);margin-left:14px}
+
+/* Body text */
+.body-p{font-size:14.5px;color:var(--charcoal);line-height:1.8;margin-bottom:14px;max-width:760px}
+.body-p strong{color:var(--purple);font-weight:700}
+
+/* Info card */
+.info-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);padding:24px 28px;margin-bottom:20px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.info-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--orange)}
+.info-card.purple::before{background:var(--purple)}
+.info-card.green::before{background:var(--green)}
+.info-card.blue::before{background:var(--blue)}
+.info-card h3{font-size:15px;font-weight:700;color:var(--charcoal);margin-bottom:8px;padding-left:4px}
+.info-card p{font-size:13.5px;color:var(--silver);line-height:1.7;padding-left:4px}
+.info-card ul{padding-left:20px;margin-top:8px}
+.info-card ul li{font-size:13.5px;color:var(--silver);line-height:1.65;margin-bottom:4px}
+
+/* Key point callout */
+.callout{
+  background:var(--purple-dk);color:var(--white);border-radius:var(--r);
+  padding:22px 26px;margin:24px 0;position:relative;overflow:hidden;
+}
+.callout::after{content:'"';position:absolute;right:20px;bottom:-20px;font-family:'Playfair Display',serif;font-size:140px;color:rgba(255,255,255,0.06);line-height:1}
+.callout .co-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.callout p{font-size:16px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.55;position:relative;z-index:1}
+.callout.orange{background:linear-gradient(135deg,var(--orange),var(--orange-dk))}
+
+/* Grid layouts */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+
+/* Stat card */
+.stat-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);padding:22px 20px;box-shadow:var(--sh);text-align:center;border-top:3px solid var(--orange);transition:transform var(--t),box-shadow var(--t)}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.stat-card:nth-child(2){border-top-color:var(--purple)}
+.stat-card:nth-child(3){border-top-color:var(--green)}
+.stat-card:nth-child(4){border-top-color:var(--blue)}
+.sc-val{font-family:'Playfair Display',serif;font-size:32px;font-weight:800;color:var(--orange);line-height:1;margin-bottom:5px}
+.stat-card:nth-child(2) .sc-val{color:var(--purple)}
+.stat-card:nth-child(3) .sc-val{color:var(--green)}
+.stat-card:nth-child(4) .sc-val{color:var(--blue)}
+.sc-lbl{font-size:12px;font-weight:700;color:var(--charcoal);margin-bottom:3px}
+.sc-sub{font-size:11px;color:var(--silver);line-height:1.4}
+
+/* Pain point card */
+.pain-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.pain-hdr{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background var(--t)}
+.pain-hdr:hover{background:var(--orange-xl)}
+.pain-hdr.open{background:var(--orange-lt)}
+.pain-icon{width:38px;height:38px;border-radius:9px;background:var(--orange-lt);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.pain-hdr.open .pain-icon{background:var(--orange);color:var(--white)}
+.pain-title{flex:1}
+.pain-title h3{font-size:15px;font-weight:700;color:var(--charcoal)}
+.pain-title p{font-size:11.5px;color:var(--silver);margin-top:2px}
+.pain-chevron{font-size:12px;color:var(--silver);transition:transform .22s}
+.pain-hdr.open .pain-chevron{transform:rotate(180deg);color:var(--orange)}
+.pain-body{display:none;padding:0 20px 20px}
+.pain-body.open{display:block}
+.pain-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
+.pain-sub-card{border-radius:var(--r-sm);padding:14px 16px}
+.pain-sub-card h4{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.pain-sub-card.feel{background:var(--red-lt);border:1px solid rgba(231,76,60,0.15)}
+.pain-sub-card.feel h4{color:var(--red)}
+.pain-sub-card.disc{background:var(--blue-lt);border:1px solid rgba(100,173,198,0.2)}
+.pain-sub-card.disc h4{color:#185FA5}
+.pain-sub-card.msg{background:var(--green-lt);border:1px solid rgba(39,174,96,0.2)}
+.pain-sub-card.msg h4{color:var(--green)}
+.pain-sub-card ul{list-style:none;padding:0}
+.pain-sub-card ul li{font-size:12px;color:var(--silver);line-height:1.55;padding-left:14px;position:relative;margin-bottom:4px}
+.pain-sub-card ul li::before{content:'›';position:absolute;left:0;color:currentColor;font-weight:700}
+.pain-sub-card.feel ul li::before{color:var(--red)}
+.pain-sub-card.disc ul li::before{color:#185FA5}
+.pain-sub-card.msg ul li::before{color:var(--green)}
+
+/* Talk track card */
+.track-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.track-hdr{display:flex;align-items:center;gap:14px;padding:16px 22px;cursor:pointer;transition:background var(--t)}
+.track-hdr:hover{background:var(--purple-xl)}
+.track-hdr.open{background:var(--purple-lt)}
+.tt-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:var(--purple-lt);color:var(--purple)}
+.track-hdr.open .tt-badge{background:var(--purple);color:var(--white)}
+.track-title{font-size:15px;font-weight:700;color:var(--charcoal);flex:1}
+.tt-chevron{font-size:12px;color:var(--silver);transition:transform .22s}
+.track-hdr.open .tt-chevron{transform:rotate(180deg);color:var(--purple)}
+.track-body{display:none;padding:20px 22px;border-top:1px solid var(--lt)}
+.track-body.open{display:block}
+.track-text{font-size:14px;color:var(--charcoal);line-height:1.85;border-left:3px solid var(--purple);padding-left:18px;font-style:italic}
+
+/* Persona tab system */
+.persona-tabs{display:flex;gap:0;border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;margin-bottom:20px;background:var(--white)}
+.ptab{flex:1;padding:12px 10px;font-size:12px;font-weight:700;color:var(--silver);cursor:pointer;border-right:1px solid var(--mid);transition:all var(--t);text-align:center;background:var(--white)}
+.ptab:last-child{border-right:none}
+.ptab:hover{background:var(--purple-xl);color:var(--purple)}
+.ptab.active{background:var(--purple);color:var(--white)}
+.persona-panel{display:none}
+.persona-panel.active{display:block}
+.persona-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-md)}
+.persona-top{background:var(--purple-dk);padding:22px 28px;color:var(--white)}
+.pt-role{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px}
+.pt-title{font-size:20px;font-weight:700;margin-bottom:10px}
+.pt-cares{display:flex;flex-wrap:wrap;gap:6px}
+.pt-tag{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:3px 11px;font-size:10.5px;color:rgba(255,255,255,0.75);font-weight:600}
+.persona-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.pb-col{padding:22px 26px}
+.pb-col:first-child{border-right:1px solid var(--lt)}
+.pb-col h4{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
+.pb-col .msg-text{font-size:13.5px;color:var(--charcoal);line-height:1.75;font-style:italic;border-left:3px solid var(--orange);padding-left:14px;margin-bottom:14px}
+.pb-col ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+.pb-col ul li{font-size:12.5px;color:var(--silver);padding-left:18px;position:relative;line-height:1.55}
+.pb-col ul li::before{content:'?';position:absolute;left:0;font-weight:900;color:var(--orange);font-size:11px}
+
+/* Objection handler */
+.obj-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:14px}
+.obj-hdr{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;cursor:pointer;transition:background var(--t)}
+.obj-hdr:hover{background:var(--orange-xl)}
+.obj-hdr.open{background:var(--orange-lt)}
+.obj-badge{background:var(--red-lt);border:1px solid rgba(231,76,60,0.2);border-radius:var(--r-sm);padding:5px 12px;font-size:10px;font-weight:700;color:var(--red);white-space:nowrap;margin-top:1px;flex-shrink:0}
+.obj-hdr.open .obj-badge{background:var(--red);color:var(--white)}
+.obj-q{font-size:14px;font-weight:700;color:var(--charcoal);line-height:1.4;flex:1}
+.obj-chevron{font-size:12px;color:var(--silver);transition:transform .22s;margin-top:3px}
+.obj-hdr.open .obj-chevron{transform:rotate(180deg)}
+.obj-body{display:none;padding:0 20px 20px}
+.obj-body.open{display:block}
+.obj-response{background:var(--green-lt);border:1px solid rgba(39,174,96,0.2);border-radius:var(--r-sm);padding:14px 18px;margin-top:12px}
+.obj-response .or-label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.obj-response p{font-size:13.5px;color:var(--charcoal);line-height:1.7}
+.obj-followup{background:var(--blue-lt);border:1px solid rgba(100,173,198,0.2);border-radius:var(--r-sm);padding:12px 16px;margin-top:8px}
+.obj-followup .ofu-label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#185FA5;margin-bottom:6px}
+.obj-followup p{font-size:13px;color:var(--charcoal);font-style:italic;line-height:1.65}
+
+/* Sales play card */
+.play-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-md);margin-bottom:20px;transition:transform var(--t),box-shadow var(--t)}
+.play-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.play-top{background:var(--purple-dk);padding:18px 24px;display:flex;align-items:center;gap:16px}
+.play-num{width:44px;height:44px;border-radius:50%;background:var(--orange);color:var(--white);font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.play-title{font-size:17px;font-weight:700;color:var(--white);flex:1}
+.play-trigger-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.65);white-space:nowrap}
+.play-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.pb-section{padding:18px 22px;border-right:1px solid var(--lt)}
+.pb-section:last-child{border-right:none}
+.pb-section h4{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.pb-section.pain h4{color:var(--red)}
+.pb-section.message h4{color:var(--green)}
+.pb-section.question h4{color:var(--blue)}
+.pb-section p{font-size:13px;color:var(--silver);line-height:1.65}
+.pb-section.question p{font-style:italic;color:var(--charcoal)}
+
+/* Quiz / exercise system */
+.exercise-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-md);margin-bottom:20px}
+.ex-hdr{background:var(--purple-dk);padding:18px 24px;display:flex;align-items:center;gap:14px}
+.ex-badge{background:var(--orange);color:var(--white);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:20px}
+.ex-title{font-size:16px;font-weight:700;color:var(--white);flex:1}
+.ex-body{padding:24px}
+.ex-question{font-size:15px;font-weight:700;color:var(--charcoal);margin-bottom:8px;line-height:1.5}
+.ex-context{font-size:13px;color:var(--silver);font-style:italic;margin-bottom:20px;padding:12px 16px;background:var(--lt);border-radius:var(--r-sm);line-height:1.65}
+.ex-textarea{width:100%;border:1.5px solid var(--mid);border-radius:var(--r-sm);padding:12px 16px;font-size:13.5px;color:var(--charcoal);resize:vertical;min-height:100px;background:var(--off);outline:none;transition:border-color var(--t);font-family:'Lato',sans-serif;line-height:1.7}
+.ex-textarea:focus{border-color:var(--orange);background:var(--white)}
+.ex-actions{display:flex;gap:10px;margin-top:12px;align-items:center}
+.ex-btn{padding:8px 20px;border-radius:20px;font-size:12.5px;font-weight:700;transition:all var(--t)}
+.ex-btn.reveal{background:var(--orange);color:var(--white);box-shadow:0 4px 14px rgba(242,108,56,0.3)}
+.ex-btn.reveal:hover{background:var(--orange-dk)}
+.ex-btn.clear{background:var(--lt);color:var(--silver)}
+.ex-btn.clear:hover{background:var(--mid)}
+.ex-answer{display:none;margin-top:16px;background:var(--green-lt);border:1px solid rgba(39,174,96,0.2);border-radius:var(--r-sm);padding:16px 18px}
+.ex-answer.show{display:block}
+.ex-answer .ea-label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+.ex-answer ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.ex-answer ul li{font-size:13px;color:var(--charcoal);padding-left:20px;position:relative;line-height:1.55}
+.ex-answer ul li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+
+/* Do / Don't */
+.dos-donts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.dd-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.dd-hdr{padding:13px 20px;font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--mid)}
+.dd-hdr.do{color:var(--green);background:var(--green-lt)}
+.dd-hdr.dont{color:var(--red);background:var(--red-lt)}
+.dd-body{padding:16px 20px}
+.dd-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px}
+.dd-list li{font-size:13px;color:var(--silver);line-height:1.55;padding-left:20px;position:relative}
+.dd-list.do li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:900;font-size:12px}
+.dd-list.dont li::before{content:'✗';position:absolute;left:0;color:var(--red);font-weight:900;font-size:12px}
+
+/* Approved lines */
+.quote-list{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
+.quote-item{
+  background:var(--white);border:1px solid var(--mid);border-radius:var(--r);
+  padding:18px 22px 18px 60px;position:relative;box-shadow:var(--sh);
+  cursor:pointer;transition:all var(--t);
+}
+.quote-item:hover{border-color:var(--orange);background:var(--orange-xl);transform:translateX(4px)}
+.quote-item::before{content:'"';position:absolute;left:18px;top:10px;font-family:'Playfair Display',serif;font-size:44px;color:var(--orange);opacity:.3;line-height:1}
+.quote-item p{font-size:14px;font-style:italic;color:var(--charcoal);line-height:1.6;font-family:'Playfair Display',serif}
+.copy-confirm{font-size:10px;color:var(--green);font-weight:700;font-style:normal;font-family:'Lato',sans-serif;margin-top:5px;display:none}
+
+/* Lifecycle diagram */
+.lifecycle{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:20px 0;margin-bottom:24px;position:relative}
+.lifecycle::after{content:'';position:absolute;top:28px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--orange),var(--purple));z-index:0;pointer-events:none}
+.lc-step{display:flex;flex-direction:column;align-items:center;flex:1;min-width:90px;position:relative;z-index:1}
+.lc-node{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:3px solid var(--white);margin-bottom:12px;box-shadow:0 3px 12px rgba(0,0,0,0.12)}
+.lc-step.orange .lc-node{background:var(--orange)}
+.lc-step.purple .lc-node{background:var(--purple)}
+.lc-step.green .lc-node{background:var(--green)}
+.lc-label{font-size:10.5px;font-weight:700;text-align:center;color:var(--charcoal);line-height:1.3}
+.lc-sublabel{font-size:9.5px;color:var(--silver);text-align:center;margin-top:3px;line-height:1.4}
+
+/* Cheat sheet */
+.cheat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.ch-card{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.ch-hdr{padding:12px 18px;font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--lt)}
+.ch-hdr.orange{color:var(--orange-dk);background:var(--orange-lt)}
+.ch-hdr.purple{color:var(--purple);background:var(--purple-lt)}
+.ch-hdr.green{color:var(--green);background:var(--green-lt)}
+.ch-hdr.blue{color:#185FA5;background:var(--blue-lt)}
+.ch-body{padding:14px 18px}
+.ch-body ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+.ch-body ul li{font-size:12.5px;color:var(--silver);padding-left:16px;position:relative;line-height:1.5}
+.ch-body ul li::before{content:'·';position:absolute;left:4px;color:var(--orange);font-weight:900;font-size:16px;line-height:1.1}
+.ch-closing{background:var(--purple-dk);color:var(--white);border-radius:var(--r);padding:22px 26px;margin-top:4px}
+.ch-closing .cl-label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.ch-closing p{font-size:15px;font-style:italic;font-family:'Playfair Display',serif;line-height:1.55}
+
+/* Question bank */
+.qbank-section{margin-bottom:22px}
+.qb-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qb-badge{background:var(--purple);color:var(--white);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px}
+.qb-list{display:flex;flex-direction:column;gap:8px}
+.qb-item{background:var(--white);border:1px solid var(--mid);border-radius:var(--r-sm);padding:12px 16px 12px 42px;position:relative;font-size:13.5px;color:var(--charcoal);line-height:1.55;box-shadow:var(--sh);transition:all var(--t);cursor:pointer}
+.qb-item:hover{border-color:var(--purple);transform:translateX(4px)}
+.qb-item::before{content:'?';position:absolute;left:14px;top:11px;color:var(--orange);font-weight:900;font-size:14px}
+
+/* Module completion */
+.mod-complete{background:var(--green-lt);border:1px solid rgba(39,174,96,0.25);border-radius:var(--r);padding:18px 22px;display:flex;align-items:center;gap:14px;margin-top:32px}
+.mc-check{width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:var(--white);font-size:18px;flex-shrink:0}
+.mc-text h4{font-size:14px;font-weight:700;color:var(--green);margin-bottom:2px}
+.mc-text p{font-size:12.5px;color:var(--silver)}
+.mc-btn{margin-left:auto;background:var(--green);color:var(--white);border:none;padding:8px 20px;border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all var(--t);font-family:'Lato',sans-serif}
+.mc-btn:hover{background:#1F8C4D}
+.mc-btn.done-btn{background:rgba(39,174,96,0.2);color:var(--green)}
+
+/* Welcome screen */
+.welcome{padding:60px 48px;max-width:860px;text-align:center;margin:0 auto}
+.welcome-eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:14px}
+.welcome-title{font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,52px);font-weight:800;color:var(--purple-dk);line-height:1.1;margin-bottom:18px}
+.welcome-title em{font-style:italic;color:var(--orange)}
+.welcome-sub{font-size:16px;color:var(--silver);line-height:1.7;max-width:640px;margin:0 auto 40px}
+.welcome-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 auto 40px;max-width:700px}
+.ws-box{background:var(--white);border:1px solid var(--mid);border-radius:var(--r);padding:18px 14px;box-shadow:var(--sh)}
+.ws-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--orange);margin-bottom:4px}
+.ws-lbl{font-size:11px;color:var(--silver);font-weight:700;line-height:1.3}
+.welcome-cta{background:var(--orange);color:var(--white);border:none;padding:14px 32px;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;transition:all var(--t);box-shadow:0 8px 24px rgba(242,108,56,0.3);font-family:'Lato',sans-serif}
+.welcome-cta:hover{background:var(--orange-dk);transform:translateY(-2px)}
+.welcome-modules{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:700px;margin:32px auto 0;text-align:left}
+.wm-item{background:var(--white);border:1px solid var(--mid);border-radius:var(--r-sm);padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all var(--t);box-shadow:var(--sh)}
+.wm-item:hover{border-color:var(--orange);background:var(--orange-xl)}
+.wm-icon{font-size:20px;flex-shrink:0}
+.wm-info{flex:1}
+.wm-name{font-size:13px;font-weight:700;color:var(--charcoal);margin-bottom:2px}
+.wm-meta{font-size:11px;color:var(--silver)}
+.wm-arrow{color:var(--silver);font-size:12px}
+.wm-item:hover .wm-arrow{color:var(--orange)}
+
+/* Responsive */
+@media(max-width:960px){
+  .sidebar{width:220px}
+  .main{margin-left:220px}
+  .topbar,.module,.welcome{padding-left:28px;padding-right:28px}
+}
+@media(max-width:700px){
+  .sidebar{transform:translateX(-100%);transition:transform .28s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .grid-2,.grid-3,.grid-4,.dos-donts,.cheat-grid,.pain-grid,.persona-body,.play-body{grid-template-columns:1fr}
+  .pb-col:first-child,.pb-section{border-right:none;border-bottom:1px solid var(--lt)}
+  .welcome-stats{grid-template-columns:repeat(2,1fr)}
+  .welcome-modules{grid-template-columns:1fr}
+}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--purple-dk);color:var(--white);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all .25s;pointer-events:none;z-index:200;box-shadow:var(--sh-md)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">e<span class="x">x</span>terro<sup style="font-size:8px;vertical-align:super">®</sup></div>
+    <div class="sb-tag">Sales Learning Guide · Subpoena Manager</div>
+  </div>
+
+  <div class="sb-progress-wrap">
+    <div class="sp-label">Progress <span id="progress-pct">0%</span></div>
+    <div class="sp-track"><div class="sp-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="sb-section-hdr">Start Here</div>
+    <div class="sb-item active" onclick="showModule('welcome',this)" data-mod="welcome">
+      <div class="sb-num">⊙</div>Overview<div class="sb-check">✓</div>
+    </div>
+
+    <div class="sb-section-hdr">Foundation</div>
+    <div class="sb-item" onclick="showModule('m1',this)" data-mod="m1">
+      <div class="sb-num">1</div>Market Context<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m2',this)" data-mod="m2">
+      <div class="sb-num">2</div>The Big Opportunity<div class="sb-check">✓</div>
+    </div>
+
+    <div class="sb-section-hdr">Conversations</div>
+    <div class="sb-item" onclick="showModule('m3',this)" data-mod="m3">
+      <div class="sb-num">3</div>Positioning<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m4',this)" data-mod="m4">
+      <div class="sb-num">4</div>Buyer Pain Points<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m5',this)" data-mod="m5">
+      <div class="sb-num">5</div>Persona Messaging<div class="sb-check">✓</div>
+    </div>
+
+    <div class="sb-section-hdr">Tools</div>
+    <div class="sb-item" onclick="showModule('m6',this)" data-mod="m6">
+      <div class="sb-num">6</div>Discovery Questions<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m7',this)" data-mod="m7">
+      <div class="sb-num">7</div>Talk Tracks<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m8',this)" data-mod="m8">
+      <div class="sb-num">8</div>Objection Handling<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m9',this)" data-mod="m9">
+      <div class="sb-num">9</div>Sales Plays<div class="sb-check">✓</div>
+    </div>
+
+    <div class="sb-section-hdr">Practice</div>
+    <div class="sb-item" onclick="showModule('m10',this)" data-mod="m10">
+      <div class="sb-num">10</div>Training Exercises<div class="sb-check">✓</div>
+    </div>
+    <div class="sb-item" onclick="showModule('m11',this)" data-mod="m11">
+      <div class="sb-num">11</div>Quick Reference<div class="sb-check">✓</div>
+    </div>
+  </div>
+
+  <div class="sb-footer">
+    <div class="sb-footer-txt"><strong>Subpoena Manager Launch Training</strong><br>Exterro Revenue Enablement · 2025<br>For internal use only.</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tb-path">
+      <span>Subpoena Manager</span>
+      <span class="sep">›</span>
+      <span class="cur" id="tb-current">Overview</span>
+    </div>
+    <div class="tb-actions">
+      <button class="tb-btn" onclick="prevModule()">← Prev</button>
+      <button class="tb-btn primary" onclick="nextModule()">Next →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       WELCOME
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module active" id="mod-welcome">
+    <div class="welcome">
+      <div class="welcome-eyebrow">Sales Learning Guide</div>
+      <h1 class="welcome-title">Third-Party Subpoena Response<br><em>Conversations That Win</em></h1>
+      <p class="welcome-sub">Everything you need to lead stronger conversations with corporate legal teams, legal operations leaders, litigation teams, and General Counsel around subpoena response — from market context through to closing questions.</p>
+
+      <div class="welcome-stats">
+        <div class="ws-box"><div class="ws-num">11</div><div class="ws-lbl">Learning modules</div></div>
+        <div class="ws-box"><div class="ws-num">6</div><div class="ws-lbl">Pain points covered</div></div>
+        <div class="ws-box"><div class="ws-num">5</div><div class="ws-lbl">Buyer personas</div></div>
+        <div class="ws-box"><div class="ws-num">5</div><div class="ws-lbl">Objections handled</div></div>
+      </div>
+
+      <button class="welcome-cta" onclick="showModule('m1',document.querySelector('[data-mod=m1]'))">Start Learning →</button>
+
+      <div class="welcome-modules">
+        <div class="wm-item" onclick="showModule('m1',document.querySelector('[data-mod=m1]'))">
+          <span class="wm-icon">🌍</span>
+          <div class="wm-info"><div class="wm-name">Market Context</div><div class="wm-meta">Why subpoena response matters now</div></div>
+          <span class="wm-arrow">›</span>
+        </div>
+        <div class="wm-item" onclick="showModule('m4',document.querySelector('[data-mod=m4]'))">
+          <span class="wm-icon">🎯</span>
+          <div class="wm-info"><div class="wm-name">Buyer Pain Points</div><div class="wm-meta">6 pains with discovery questions</div></div>
+          <span class="wm-arrow">›</span>
+        </div>
+        <div class="wm-item" onclick="showModule('m5',document.querySelector('[data-mod=m5]'))">
+          <span class="wm-icon">👥</span>
+          <div class="wm-info"><div class="wm-name">Persona Messaging</div><div class="wm-meta">5 personas with tailored messages</div></div>
+          <span class="wm-arrow">›</span>
+        </div>
+        <div class="wm-item" onclick="showModule('m8',document.querySelector('[data-mod=m8]'))">
+          <span class="wm-icon">🥊</span>
+          <div class="wm-info"><div class="wm-name">Objection Handling</div><div class="wm-meta">5 objections with full responses</div></div>
+          <span class="wm-arrow">›</span>
+        </div>
+        <div class="wm-item" onclick="showModule('m10',document.querySelector('[data-mod=m10]'))">
+          <span class="wm-icon">✍️</span>
+          <div class="wm-info"><div class="wm-name">Training Exercises</div><div class="wm-meta">Practice before your next call</div></div>
+          <span class="wm-arrow">›</span>
+        </div>
+        <div class="wm-item" onclick="showModule('m11',document.querySelector('[data-mod=m11]'))">
+          <span class="wm-icon">⚡</span>
+          <div class="wm-info"><div class="wm-name">Quick Reference</div><div class="wm-meta">Cheat sheet + approved lines</div></div>
+          <span class="wm-arrow">›</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M1: MARKET CONTEXT
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m1">
+    <div class="mod-eyebrow">Module 1 · Foundation</div>
+    <h1 class="mod-title">Market Context:<br><em>Why This Conversation Matters</em></h1>
+    <p class="mod-lead">Third-party subpoenas are often unpredictable, disruptive, and costly for in-house legal teams. Understanding the market context helps you lead the conversation with authority — and position Exterro around a genuine operational need, not a product feature.</p>
+
+    <div class="sec-hdr"><h2>What Are Third-Party Subpoenas?</h2><p>Setting the stage for the buyer conversation</p></div>
+
+    <div class="grid-3">
+      <div class="info-card">
+        <h3>📄 Document Subpoena</h3>
+        <p>Requires the recipient to produce documents, records, or physical evidence. No testimony required.</p>
+      </div>
+      <div class="info-card purple">
+        <h3>🎤 Witness Subpoena</h3>
+        <p>Compels a witness to appear in court or at a deposition to provide testimony.</p>
+      </div>
+      <div class="info-card green">
+        <h3>📋 Deposition Subpoena</h3>
+        <p>Calls for a witness to appear at a deposition to testify and potentially produce documents.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="co-label">Key Context</div>
+      <p>Companies often receive subpoenas from parties in litigation they are not involved in. Requests come from regulatory organizations — SEC, DOJ, industry regulators, government agencies, and grand juries. The information sought may be confidential, privileged, or sensitive.</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Common Subpoena Scenarios</h2><p>Know what triggers these conversations</p></div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h3>🏛️ Regulatory Investigations</h3>
+        <p>SEC, Department of Justice, or industry-specific regulatory bodies seeking information as part of an investigation into conduct or compliance matters.</p>
+      </div>
+      <div class="info-card">
+        <h3>⚖️ Third-Party Litigation</h3>
+        <p>Other parties in active litigation seeking customer records, contracts, or communications that the organization may hold.</p>
+      </div>
+      <div class="info-card">
+        <h3>👥 Employee Matters</h3>
+        <p>Employees involved in divorce, debt, or personal lawsuits where their employer holds relevant records.</p>
+      </div>
+      <div class="info-card blue">
+        <h3>💡 IP Disputes & M&A</h3>
+        <p>Patent, trademark, and copyright disputes, plus mergers and acquisitions seeking due diligence materials or financial records.</p>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><h2>What Reps Must Know Cold</h2><p>These points should be second nature before any buyer conversation</p></div>
+
+    <div class="info-card">
+      <ul>
+        <li><strong>Subpoenas are unpredictable.</strong> They arrive unexpectedly and disrupt planned legal team priorities immediately.</li>
+        <li><strong>Legal teams must act fast.</strong> Understand the request, assess burden, determine data access, and protect privilege — quickly.</li>
+        <li><strong>Subpoena response resembles litigation response.</strong> Teams may need to preserve data, issue legal holds, collect, review, and produce.</li>
+        <li><strong>Ignoring a subpoena creates serious risk.</strong> Noncompliance leads to legal consequences, reputational damage, and escalation.</li>
+        <li><strong>Even objections don't stop preservation.</strong> Teams may seek to quash or narrow scope, but potentially responsive data must still be protected.</li>
+        <li><strong>Routine work can be handled internally.</strong> Over-reliance on outside counsel creates delays and unnecessary expense. Process control is the enabler.</li>
+        <li><strong>The breakdown starts earlier than eDiscovery.</strong> Intake, routing, follow-up, and approval failures happen before review and production begin.</li>
+      </ul>
+    </div>
+
+    <div class="callout orange">
+      <div class="co-label">The Sales Opportunity</div>
+      <p>"Modern legal teams need process control, not just document tools. The opportunity for Exterro is the full lifecycle — from the instant a subpoena is received through production and closure."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>The Full Subpoena Lifecycle</h2><p>Exterro's opportunity extends across every stage</p></div>
+
+    <div class="lifecycle">
+      <div class="lc-step orange">
+        <div class="lc-node">📥</div>
+        <div class="lc-label">Intake</div>
+        <div class="lc-sublabel">Capture & validate</div>
+      </div>
+      <div class="lc-step orange">
+        <div class="lc-node">⏱️</div>
+        <div class="lc-label">Deadlines</div>
+        <div class="lc-sublabel">Capture & track</div>
+      </div>
+      <div class="lc-step orange">
+        <div class="lc-node">🔀</div>
+        <div class="lc-label">Routing</div>
+        <div class="lc-sublabel">Assign & follow up</div>
+      </div>
+      <div class="lc-step purple">
+        <div class="lc-node">🔒</div>
+        <div class="lc-label">Preservation</div>
+        <div class="lc-sublabel">Legal hold trigger</div>
+      </div>
+      <div class="lc-step purple">
+        <div class="lc-node">📦</div>
+        <div class="lc-label">Collection</div>
+        <div class="lc-sublabel">Gather responsive data</div>
+      </div>
+      <div class="lc-step purple">
+        <div class="lc-node">🔍</div>
+        <div class="lc-label">Review</div>
+        <div class="lc-sublabel">Privilege & relevance</div>
+      </div>
+      <div class="lc-step green">
+        <div class="lc-node">✂️</div>
+        <div class="lc-label">Redaction</div>
+        <div class="lc-sublabel">PII & sensitive data</div>
+      </div>
+      <div class="lc-step green">
+        <div class="lc-node">📤</div>
+        <div class="lc-label">Production</div>
+        <div class="lc-sublabel">Deliver response</div>
+      </div>
+      <div class="lc-step green">
+        <div class="lc-node">📊</div>
+        <div class="lc-label">Closure</div>
+        <div class="lc-sublabel">Report & audit</div>
+      </div>
+    </div>
+    <p class="body-p" style="font-size:12px;color:var(--silver);text-align:center;margin-top:-10px;margin-bottom:24px">🟠 Exterro Subpoena Manager owns the orange stages — where most teams are still manual. The purple and green stages connect to the broader Exterro platform.</p>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 1 Complete</h4><p>You understand the market context and full lifecycle opportunity.</p></div>
+      <button class="mc-btn" onclick="completeModule('m1')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M2: THE BIG OPPORTUNITY
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m2">
+    <div class="mod-eyebrow">Module 2 · Foundation</div>
+    <h1 class="mod-title">The Big Sales <em>Opportunity</em></h1>
+    <p class="mod-lead">Legal teams want to bring more subpoena response work in-house. But many still struggle because the early stages are fragmented, manual, and hard to audit. <strong>That's where Exterro wins.</strong></p>
+
+    <div class="callout">
+      <div class="co-label">The Core Insight</div>
+      <p>"A subpoena response problem does not start at document review. It starts the instant the subpoena is received."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Where the Pain Actually Lives</h2><p>The early stages where most teams are still completely manual</p></div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h3>🔴 What breaks down at intake</h3>
+        <ul>
+          <li>Manual intake — no structured capture</li>
+          <li>Re-keying information into spreadsheets or matter systems</li>
+          <li>Missing or inconsistent deadline capture</li>
+          <li>Unclear ownership from the moment of receipt</li>
+          <li>Manual routing to HR, claims, records, IT, finance</li>
+          <li>Chasing internal responses by email</li>
+          <li>No unified status visibility across the team</li>
+          <li>No reliable workflow audit trail</li>
+        </ul>
+      </div>
+      <div class="info-card purple">
+        <h3>🟣 Where buyers think the problem lives</h3>
+        <ul>
+          <li>Collection efficiency</li>
+          <li>Review speed</li>
+          <li>PII redaction capability</li>
+          <li>Early case assessment</li>
+          <li>Collaboration on review</li>
+          <li>Production quality</li>
+          <li>Outside counsel collaboration</li>
+        </ul>
+        <p style="margin-top:12px;font-size:12px;color:var(--silver);font-style:italic">Your job: expand the conversation to everything before collection begins.</p>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><h2>The Sales Reframe</h2><p>What to say vs. what not to say</p></div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h3>❌ Don't say this</h3>
+        <p style="color:var(--red)">"We only need to talk about review and production."</p>
+      </div>
+      <div class="info-card green">
+        <h3>✅ Say this instead</h3>
+        <p>"Modern eDiscovery is important, but many legal teams still struggle with everything that happens before collection and review. The question is whether your team has a controlled workflow from the instant the subpoena is received."</p>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><h2>Exterro's Expansion of the Conversation</h2></div>
+
+    <div class="info-card">
+      <h3>Common Buyer Focus → Exterro Expands To</h3>
+      <div class="grid-2" style="margin-top:14px;gap:12px">
+        <div style="background:var(--red-lt);border-radius:var(--r-sm);padding:14px 16px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px">Buyer Focus</div>
+          <ul style="list-style:none;padding:0;font-size:13px;color:var(--silver);display:flex;flex-direction:column;gap:5px">
+            <li>Collection &amp; review</li>
+            <li>PII redaction</li>
+            <li>Collaboration</li>
+            <li>Production</li>
+          </ul>
+        </div>
+        <div style="background:var(--green-lt);border-radius:var(--r-sm);padding:14px 16px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px">Exterro Expands To</div>
+          <ul style="list-style:none;padding:0;font-size:13px;color:var(--charcoal);display:flex;flex-direction:column;gap:5px">
+            <li>Intake from the instant of receipt</li>
+            <li>AI-assisted extraction of key details</li>
+            <li>Structured request records</li>
+            <li>Deadline capture &amp; workflow initiation</li>
+            <li>Classification and prioritization</li>
+            <li>Departmental routing &amp; follow-up</li>
+            <li>Legal review checkpoints</li>
+            <li>Full audit trail across the lifecycle</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout orange">
+      <div class="co-label">The Reframe Line — Memorize This</div>
+      <p>"Modern eDiscovery helps legal teams manage documents. Exterro Subpoena Manager helps legal teams manage the subpoena response workflow."</p>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 2 Complete</h4><p>You can articulate the sales opportunity and perform the conversation reframe.</p></div>
+      <button class="mc-btn" onclick="completeModule('m2')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M3: POSITIONING
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m3">
+    <div class="mod-eyebrow">Module 3 · Conversations</div>
+    <h1 class="mod-title">Sales <em>Positioning</em></h1>
+    <p class="mod-lead">Four ready-to-use positioning statements for different conversation contexts. Know which one to use and when.</p>
+
+    <div class="grid-4">
+      <div class="stat-card">
+        <div class="sc-val">Core</div>
+        <div class="sc-lbl">Positioning Statement</div>
+        <div class="sc-sub">Full context conversations</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-val">Short</div>
+        <div class="sc-lbl">Sales Message</div>
+        <div class="sc-sub">Email and cold outreach</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-val">Exec</div>
+        <div class="sc-lbl">Executive Message</div>
+        <div class="sc-sub">GC and C-suite conversations</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-val">Prac</div>
+        <div class="sc-lbl">Practitioner Message</div>
+        <div class="sc-sub">Paralegal and ops leaders</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><h2>Core Positioning Statement</h2><p>Use when you have time to tell the full story</p></div>
+    <div class="info-card">
+      <p style="font-size:14px;line-height:1.85;font-style:italic;color:var(--charcoal)">"Third-party subpoena response is not just a review and production challenge. It is a legal operations workflow that begins the instant a subpoena is received. Exterro Subpoena Manager helps legal teams manage that workflow with AI-assisted intake, structured records, configurable routing, human oversight, and defensible process control."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Short Sales Message</h2><p>Use for BDR outreach, email follow-up, LinkedIn</p></div>
+    <div class="info-card green">
+      <p style="font-size:14px;line-height:1.85;font-style:italic;color:var(--charcoal)">"Legal teams can use eDiscovery tools to collect, review, redact, and produce documents. But subpoena response starts much earlier. Exterro helps teams capture the request, extract critical details, route the work, trigger follow-up, preserve oversight, and connect the workflow to downstream discovery activity."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Executive Message</h2><p>Use with General Counsel and legal operations leadership</p></div>
+    <div class="info-card purple">
+      <p style="font-size:14px;line-height:1.85;font-style:italic;color:var(--charcoal)">"For General Counsel and legal operations leaders, subpoena response is a cost, risk, and control issue. Exterro helps legal teams reduce manual work, improve response consistency, and preserve defensibility across the subpoena lifecycle — from the instant of receipt through production and closure."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Practitioner Message</h2><p>Use with paralegals, legal coordinators, and ops practitioners</p></div>
+    <div class="info-card blue">
+      <p style="font-size:14px;line-height:1.85;font-style:italic;color:var(--charcoal)">"Subpoena Manager helps legal teams replace spreadsheet-driven tracking and manual email follow-up with a structured workflow for intake, routing, deadline tracking, review coordination, production readiness, and status visibility."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Competitive Reframe Questions</h2><p>Use when buyers think their existing platform is enough</p></div>
+    <div class="info-card">
+      <h3>Ask the buyer to evaluate their current solution against these criteria:</h3>
+      <ul>
+        <li>Does the solution start at subpoena intake or only after documents are ready for discovery?</li>
+        <li>Can it extract and structure key subpoena details automatically?</li>
+        <li>Can it route work to the right department with configurable workflows?</li>
+        <li>Can it trigger and track follow-up across internal departments?</li>
+        <li>Can it preserve human review and approval before legal action?</li>
+        <li>Can it connect to collection, review, redaction, and production?</li>
+        <li>Can it show the full audit history of the response from receipt through closure?</li>
+      </ul>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 3 Complete</h4><p>You can position Exterro Subpoena Manager for any conversation context.</p></div>
+      <button class="mc-btn" onclick="completeModule('m3')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M4: BUYER PAIN POINTS
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m4">
+    <div class="mod-eyebrow">Module 4 · Conversations</div>
+    <h1 class="mod-title">Buyer <em>Pain Points</em></h1>
+    <p class="mod-lead">Six core pain points to uncover in every subpoena response conversation. Each includes what the buyer feels, the discovery questions to ask, and the Exterro message to land. Click each pain point to expand.</p>
+
+    <!-- Pain 1 -->
+    <div class="pain-card">
+      <div class="pain-hdr" onclick="togglePanel(this)">
+        <div class="pain-icon">📬</div>
+        <div class="pain-title"><h3>Pain 1: Subpoenas Arrive Unpredictably</h3><p>Disruption, urgency, and reactive scrambling</p></div>
+        <div class="pain-chevron">▾</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-grid">
+          <div class="pain-sub-card feel">
+            <h4>What the buyer feels</h4>
+            <ul><li>Team is constantly pulled from higher-value work</li><li>No consistent process for triage when a subpoena arrives</li><li>Urgency varies wildly — hard to prioritize</li></ul>
+          </div>
+          <div class="pain-sub-card disc">
+            <h4>Discovery Questions</h4>
+            <ul><li>How often do subpoenas arrive unexpectedly and disrupt planned work?</li><li>Who is responsible for triage when a subpoena comes in?</li><li>How do you determine urgency and ownership?</li></ul>
+          </div>
+          <div class="pain-sub-card msg">
+            <h4>Exterro Message</h4>
+            <ul><li>Subpoena Manager gives legal teams a structured starting point</li><li>Every subpoena captured, assessed, routed, and tracked from the instant of receipt</li><li>Consistent — regardless of who receives it or when</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain 2 -->
+    <div class="pain-card">
+      <div class="pain-hdr" onclick="togglePanel(this)">
+        <div class="pain-icon">⌨️</div>
+        <div class="pain-title"><h3>Pain 2: Intake Is Manual and Inconsistent</h3><p>Re-keying, spreadsheet tracking, no structure</p></div>
+        <div class="pain-chevron">▾</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-grid">
+          <div class="pain-sub-card feel">
+            <h4>What the buyer feels</h4>
+            <ul><li>Time wasted reading, extracting, and re-entering the same data</li><li>Inconsistent tracking across team members</li><li>Spreadsheets quickly become outdated or diverge</li></ul>
+          </div>
+          <div class="pain-sub-card disc">
+            <h4>Discovery Questions</h4>
+            <ul><li>How much time does your team spend getting a subpoena into your system?</li><li>Are subpoena details entered manually into spreadsheets or matter systems?</li><li>How do you validate deadlines, parties, request type, and required actions?</li></ul>
+          </div>
+          <div class="pain-sub-card msg">
+            <h4>Exterro Message</h4>
+            <ul><li>Subpoena Manager captures critical details automatically</li><li>Creates structured records — no manual re-entry</li><li>Consistent intake regardless of channel or volume</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain 3 -->
+    <div class="pain-card">
+      <div class="pain-hdr" onclick="togglePanel(this)">
+        <div class="pain-icon">🔀</div>
+        <div class="pain-title"><h3>Pain 3: Routing Depends on Email and Memory</h3><p>Manual follow-up, unclear ownership, missed responses</p></div>
+        <div class="pain-chevron">▾</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-grid">
+          <div class="pain-sub-card feel">
+            <h4>What the buyer feels</h4>
+            <ul><li>HR, claims, IT, finance — all managed by email</li><li>Hard to know who has responded vs. who hasn't</li><li>Delays caused by one department not seeing the request</li></ul>
+          </div>
+          <div class="pain-sub-card disc">
+            <h4>Discovery Questions</h4>
+            <ul><li>Which internal departments are usually involved?</li><li>How do you route requests today?</li><li>How do you track follow-up when someone doesn't respond?</li><li>Can you see each department's response status in one place?</li></ul>
+          </div>
+          <div class="pain-sub-card msg">
+            <h4>Exterro Message</h4>
+            <ul><li>Configurable workflows route work automatically</li><li>Follow-up triggered without manual reminders</li><li>Real-time status visibility across all departments</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain 4 -->
+    <div class="pain-card">
+      <div class="pain-hdr" onclick="togglePanel(this)">
+        <div class="pain-icon">🔒</div>
+        <div class="pain-title"><h3>Pain 4: Sensitive Data and Privilege Must Be Protected</h3><p>Employee records, PII, privileged communications</p></div>
+        <div class="pain-chevron">▾</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-grid">
+          <div class="pain-sub-card feel">
+            <h4>What the buyer feels</h4>
+            <ul><li>Anxiety about inadvertent privilege waiver or PII exposure</li><li>Approval process is ad hoc and undocumented</li><li>Hard to demonstrate what was withheld and why</li></ul>
+          </div>
+          <div class="pain-sub-card disc">
+            <h4>Discovery Questions</h4>
+            <ul><li>What types of sensitive information are commonly implicated?</li><li>How do you identify privileged or confidential material before production?</li><li>Who approves what is produced?</li><li>How do you document decisions to withhold, redact, or narrow scope?</li></ul>
+          </div>
+          <div class="pain-sub-card msg">
+            <h4>Exterro Message</h4>
+            <ul><li>Human legal oversight and defensible review checkpoints built in</li><li>Exterro coordinates the workflow while preserving legal judgment</li><li>Full audit trail of decisions, approvals, and actions</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain 5 -->
+    <div class="pain-card">
+      <div class="pain-hdr" onclick="togglePanel(this)">
+        <div class="pain-icon">💰</div>
+        <div class="pain-title"><h3>Pain 5: Outside Counsel Dependency Drives Cost</h3><p>Routine subpoenas outsourced due to process — not complexity</p></div>
+        <div class="pain-chevron">▾</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-grid">
+          <div class="pain-sub-card feel">
+            <h4>What the buyer feels</h4>
+            <ul><li>Routine subpoenas sent to outside counsel because the internal process is too manual</li><li>Cost and delay created by work that didn't need to go out</li><li>No clear way to assess what should stay in-house</li></ul>
+          </div>
+          <div class="pain-sub-card disc">
+            <h4>Discovery Questions</h4>
+            <ul><li>Which subpoena types do you handle internally today?</li><li>Are routine subpoenas outsourced because of legal complexity or operational difficulty?</li><li>What would you want to bring in-house if the workflow were easier to manage?</li></ul>
+          </div>
+          <div class="pain-sub-card msg">
+            <h4>Exterro Message</h4>
+            <ul><li>Subpoena Manager helps handle more routine work internally</li><li>Better process structure, visibility, and coordination enables in-house handling</li><li>Reserve outside counsel for matters that truly need legal strategy</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pain 6 -->
+    <div class="pain-card">
+      <div class="pain-hdr" onclick="togglePanel(this)">
+        <div class="pain-icon">📋</div>
+        <div class="pain-title"><h3>Pain 6: No Clean Audit Trail</h3><p>Reconstructing the process after the fact — from email threads</p></div>
+        <div class="pain-chevron">▾</div>
+      </div>
+      <div class="pain-body">
+        <div class="pain-grid">
+          <div class="pain-sub-card feel">
+            <h4>What the buyer feels</h4>
+            <ul><li>Process is scattered across email, spreadsheets, shared drives, and review tools</li><li>If challenged, would need to reconstruct the record manually</li><li>"Who approved this?" is often unanswerable</li></ul>
+          </div>
+          <div class="pain-sub-card disc">
+            <h4>Discovery Questions</h4>
+            <ul><li>If a response were challenged six months later, how easily could you reconstruct the process?</li><li>Where is the record of decisions, approvals, and follow-up stored?</li><li>Do you have a single place to see the full response history?</li></ul>
+          </div>
+          <div class="pain-sub-card msg">
+            <h4>Exterro Message</h4>
+            <ul><li>Creates a defensible operational record across intake, routing, review, production, and closure</li><li>Complete trail — who did what, when, what was approved</li><li>Built for the moment someone asks the hard question</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 4 Complete</h4><p>You know all six pain points, discovery questions, and Exterro messages.</p></div>
+      <button class="mc-btn" onclick="completeModule('m4')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M5: PERSONA MESSAGING
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m5">
+    <div class="mod-eyebrow">Module 5 · Conversations</div>
+    <h1 class="mod-title">Persona-Based <em>Messaging</em></h1>
+    <p class="mod-lead">Five buyer personas with tailored messages and best discovery questions. Select a persona to see the full profile.</p>
+
+    <div class="persona-tabs">
+      <div class="ptab active" onclick="showPersona('gc',this)">General Counsel</div>
+      <div class="ptab" onclick="showPersona('legalops',this)">Legal Operations</div>
+      <div class="ptab" onclick="showPersona('litigation',this)">Litigation</div>
+      <div class="ptab" onclick="showPersona('paralegal',this)">Paralegal</div>
+      <div class="ptab" onclick="showPersona('ciso',this)">CIO / CISO</div>
+    </div>
+
+    <div class="persona-panel active" id="persona-gc">
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="pt-role">Persona</div>
+          <div class="pt-title">General Counsel / Deputy GC</div>
+          <div class="pt-cares">
+            <span class="pt-tag">Legal risk</span><span class="pt-tag">Cost control</span><span class="pt-tag">Privilege & confidentiality</span><span class="pt-tag">Governance</span><span class="pt-tag">Defensibility</span><span class="pt-tag">Reduce outside counsel</span>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="pb-col">
+            <h4>Message That Lands</h4>
+            <p class="msg-text">"Subpoena response is a legal obligation, but it doesn't need to be a recurring operational fire drill. Exterro helps legal teams reduce manual work, improve control, and preserve defensibility across the subpoena lifecycle."</p>
+          </div>
+          <div class="pb-col">
+            <h4>Best Discovery Questions</h4>
+            <ul>
+              <li>How much subpoena response work is sent to outside counsel today?</li>
+              <li>What types of subpoenas create the most risk for your organization?</li>
+              <li>How do you ensure privilege, confidentiality, and sensitive data are protected before production?</li>
+              <li>Can your team defend the process if a response is challenged?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-panel" id="persona-legalops">
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="pt-role">Persona</div>
+          <div class="pt-title">Head / Director of Legal Operations</div>
+          <div class="pt-cares">
+            <span class="pt-tag">Workflow efficiency</span><span class="pt-tag">Team capacity</span><span class="pt-tag">Process standardization</span><span class="pt-tag">Reporting</span><span class="pt-tag">Cycle time</span><span class="pt-tag">Internal coordination</span>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="pb-col">
+            <h4>Message That Lands</h4>
+            <p class="msg-text">"Exterro helps legal operations teams turn subpoena response into a structured, repeatable workflow with better intake, routing, follow-up, visibility, and reporting."</p>
+          </div>
+          <div class="pb-col">
+            <h4>Best Discovery Questions</h4>
+            <ul>
+              <li>Where does the subpoena process slow down today?</li>
+              <li>How much time is spent manually entering data or chasing internal teams?</li>
+              <li>Do you have real-time visibility into subpoena status and bottlenecks?</li>
+              <li>What metrics do you report on today for subpoena response?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-panel" id="persona-litigation">
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="pt-role">Persona</div>
+          <div class="pt-title">Head of Litigation / Litigation Operations</div>
+          <div class="pt-cares">
+            <span class="pt-tag">Deadlines</span><span class="pt-tag">Scope decisions</span><span class="pt-tag">Preservation</span><span class="pt-tag">Collection quality</span><span class="pt-tag">Review</span><span class="pt-tag">Outside counsel cost</span>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="pb-col">
+            <h4>Message That Lands</h4>
+            <p class="msg-text">"Exterro helps litigation teams connect subpoena intake and workflow control with downstream preservation, collection, review, redaction, and production processes."</p>
+          </div>
+          <div class="pb-col">
+            <h4>Best Discovery Questions</h4>
+            <ul>
+              <li>How do you determine whether to comply, object, narrow scope, or escalate?</li>
+              <li>How do you preserve potentially responsive data while evaluating the subpoena?</li>
+              <li>How are documents reviewed before they are produced?</li>
+              <li>Where do handoffs create delay or risk in your current process?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-panel" id="persona-paralegal">
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="pt-role">Persona</div>
+          <div class="pt-title">Senior Paralegal / Legal Operations Practitioner</div>
+          <div class="pt-cares">
+            <span class="pt-tag">Daily workload</span><span class="pt-tag">Manual follow-up</span><span class="pt-tag">Accuracy</span><span class="pt-tag">Deadline pressure</span><span class="pt-tag">Clear ownership</span>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="pb-col">
+            <h4>Message That Lands</h4>
+            <p class="msg-text">"Subpoena Manager helps reduce repetitive intake, manual tracking, and email follow-up so legal professionals can focus on review, coordination, and higher-value legal work."</p>
+          </div>
+          <div class="pb-col">
+            <h4>Best Discovery Questions</h4>
+            <ul>
+              <li>What steps do you take when a subpoena first arrives?</li>
+              <li>What information do you have to enter manually into your systems?</li>
+              <li>How do you track who has responded to your follow-up requests?</li>
+              <li>What happens when a department misses a follow-up deadline?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-panel" id="persona-ciso">
+      <div class="persona-card">
+        <div class="persona-top">
+          <div class="pt-role">Persona</div>
+          <div class="pt-title">CIO / CISO / Security Stakeholder</div>
+          <div class="pt-cares">
+            <span class="pt-tag">Data protection</span><span class="pt-tag">Access controls</span><span class="pt-tag">Secure workflows</span><span class="pt-tag">Approved systems</span><span class="pt-tag">Auditability</span>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="pb-col">
+            <h4>Message That Lands</h4>
+            <p class="msg-text">"Subpoena response often involves sensitive business, employee, customer, and regulated data. Exterro helps legal teams manage the workflow within a controlled platform instead of relying on scattered emails, spreadsheets, and shared drives."</p>
+          </div>
+          <div class="pb-col">
+            <h4>Best Discovery Questions</h4>
+            <ul>
+              <li>Where does subpoena-related data move today across your organization?</li>
+              <li>Are requests and responsive materials tracked in secure, approved systems?</li>
+              <li>How do you control access to sensitive records involved in a subpoena?</li>
+              <li>What audit trail exists across the subpoena response process?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 5 Complete</h4><p>You can tailor your message and questions to any buyer persona.</p></div>
+      <button class="mc-btn" onclick="completeModule('m5')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M6: DISCOVERY QUESTIONS
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m6">
+    <div class="mod-eyebrow">Module 6 · Tools</div>
+    <h1 class="mod-title">Discovery <em>Question Bank</em></h1>
+    <p class="mod-lead">Click any question to copy it. Use 3–5 per conversation. The goal is to let the buyer describe the pain — not for you to pitch before they've confirmed it exists.</p>
+
+    <div class="qbank-section">
+      <div class="qb-hdr"><span class="qb-badge">Opening</span></div>
+      <div class="qb-list">
+        <div class="qb-item" onclick="copyQ(this)">How are third-party subpoenas handled today? Who receives them first? How are they triaged?</div>
+        <div class="qb-item" onclick="copyQ(this)">How many subpoenas do you handle in a typical month or quarter?</div>
+        <div class="qb-item" onclick="copyQ(this)">Which departments are usually involved in the response process?</div>
+      </div>
+    </div>
+
+    <div class="qbank-section">
+      <div class="qb-hdr"><span class="qb-badge" style="background:var(--blue);color:var(--white)">Process</span></div>
+      <div class="qb-list">
+        <div class="qb-item" onclick="copyQ(this)">What happens from the instant a subpoena is received — walk me through the first 30 minutes?</div>
+        <div class="qb-item" onclick="copyQ(this)">How are deadlines captured and validated? Who owns that step?</div>
+        <div class="qb-item" onclick="copyQ(this)">How is the right internal team identified and engaged?</div>
+        <div class="qb-item" onclick="copyQ(this)">How are follow-ups handled when a department doesn't respond in time?</div>
+        <div class="qb-item" onclick="copyQ(this)">How are decisions documented — who approved what, and when?</div>
+      </div>
+    </div>
+
+    <div class="qbank-section">
+      <div class="qb-hdr"><span class="qb-badge" style="background:var(--orange);color:var(--white)">Cost</span></div>
+      <div class="qb-list">
+        <div class="qb-item" onclick="copyQ(this)">Which subpoena types are handled internally versus sent to outside counsel?</div>
+        <div class="qb-item" onclick="copyQ(this)">What drives the decision to involve outside counsel — legal complexity or operational difficulty?</div>
+        <div class="qb-item" onclick="copyQ(this)">What would it mean financially if more routine responses could be handled internally?</div>
+      </div>
+    </div>
+
+    <div class="qbank-section">
+      <div class="qb-hdr"><span class="qb-badge" style="background:var(--red);color:var(--white)">Risk</span></div>
+      <div class="qb-list">
+        <div class="qb-item" onclick="copyQ(this)">How do you identify privileged, confidential, or sensitive information before production?</div>
+        <div class="qb-item" onclick="copyQ(this)">Who approves the final production decision? How is that approval documented?</div>
+        <div class="qb-item" onclick="copyQ(this)">Could you reconstruct the full response history if a response were challenged six months from now?</div>
+      </div>
+    </div>
+
+    <div class="qbank-section">
+      <div class="qb-hdr"><span class="qb-badge" style="background:var(--green);color:var(--white)">Technology</span></div>
+      <div class="qb-list">
+        <div class="qb-item" onclick="copyQ(this)">What systems are used today for intake, tracking, collection, review, and production?</div>
+        <div class="qb-item" onclick="copyQ(this)">How much of the process happens in email or spreadsheets?</div>
+        <div class="qb-item" onclick="copyQ(this)">Does your eDiscovery platform start early enough in the process, or does manual work happen before it?</div>
+        <div class="qb-item" onclick="copyQ(this)">Do you have a single workflow view from receipt through production?</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="co-label">Best Closing Question</div>
+      <p>"If you could redesign subpoena response, would you start by improving document review, or would you first fix the intake, routing, deadline, and follow-up process that determines how every response gets handled?"</p>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 6 Complete</h4><p>You have a full question bank ready for any subpoena response conversation.</p></div>
+      <button class="mc-btn" onclick="completeModule('m6')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M7: TALK TRACKS
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m7">
+    <div class="mod-eyebrow">Module 7 · Tools</div>
+    <h1 class="mod-title">Talk <em>Tracks</em></h1>
+    <p class="mod-lead">Three ready-to-use talk tracks for different conversation lengths and contexts. Practice these until they feel natural — not scripted.</p>
+
+    <div class="track-card">
+      <div class="track-hdr" onclick="togglePanel(this)">
+        <div class="tt-badge">⏱ 30 Seconds</div>
+        <div class="track-title">The Quick Opener — Cold calls, hallway conversations, event conversations</div>
+        <div class="tt-chevron">▾</div>
+      </div>
+      <div class="track-body">
+        <p class="track-text">"Third-party subpoenas often arrive unexpectedly, and legal teams need to move quickly while protecting privileged, confidential, and sensitive information. Modern eDiscovery tools can help with collection, review, redaction, and production, but the real challenge often starts earlier — at intake, routing, deadline capture, and internal follow-up. Exterro Subpoena Manager helps legal teams manage the full subpoena lifecycle with structured workflows, AI-assisted intake, human oversight, and defensible process visibility."</p>
+        <div class="info-card" style="margin-top:14px;padding:14px 18px">
+          <h3>When to use this</h3>
+          <p>Cold call openers, conference introductions, 30-second elevator pitch moments. The goal is to earn a longer conversation — not close the deal.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-card">
+      <div class="track-hdr" onclick="togglePanel(this)">
+        <div class="tt-badge">⏱ 60 Seconds</div>
+        <div class="track-title">The Full Pitch — Discovery calls, email follow-up, first meetings</div>
+        <div class="tt-chevron">▾</div>
+      </div>
+      <div class="track-body">
+        <p class="track-text">"A third-party subpoena is more than a document request. It's a legal obligation that can involve fast deadlines, sensitive data, internal coordination, privilege review, and production decisions. Many teams still manage the early stages through email, spreadsheets, and manual follow-up, then move into eDiscovery tools later for collection and review.<br><br>Exterro helps close that gap. Subpoena Manager gives legal teams a structured way to capture the request, extract critical details, create a record, route the work, trigger follow-up, preserve human oversight, and connect the process to downstream discovery activity.<br><br>That helps teams respond faster, reduce manual effort, improve visibility, and maintain a more defensible process from the instant of receipt through production."</p>
+        <div class="info-card" style="margin-top:14px;padding:14px 18px">
+          <h3>When to use this</h3>
+          <p>Use this in first discovery meetings or when following up on BDR outreach. After delivering this, ask: "Does any of that resonate with how your team handles subpoena response today?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-card">
+      <div class="track-hdr" onclick="togglePanel(this)">
+        <div class="tt-badge">🏛 Executive</div>
+        <div class="track-title">Executive Talk Track — GC, CLO, and C-suite conversations</div>
+        <div class="tt-chevron">▾</div>
+      </div>
+      <div class="track-body">
+        <p class="track-text">"Many organizations treat third-party subpoenas as a recurring cost of doing business, but the process often hides unnecessary expense, inconsistent handling, and avoidable risk. The opportunity isn't simply to review documents faster. The opportunity is to bring the full subpoena response process under greater control.<br><br>Exterro Subpoena Manager helps legal teams operationalize subpoena response — reducing reliance on fragmented tracking, manual routing, and ad hoc follow-up. The result is a more structured, visible, and defensible process that can help legal departments manage routine subpoena work more efficiently while preserving oversight where legal judgment matters."</p>
+        <div class="info-card" style="margin-top:14px;padding:14px 18px">
+          <h3>When to use this</h3>
+          <p>Use with General Counsel, CLO, or any C-suite stakeholder focused on cost, risk, and control. Frame the conversation around organizational benefit, not workflow features. Follow with: "How are you currently thinking about the cost and risk of how subpoena response is managed today?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 7 Complete</h4><p>You have three talk tracks ready for any length conversation.</p></div>
+      <button class="mc-btn" onclick="completeModule('m7')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M8: OBJECTION HANDLING
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m8">
+    <div class="mod-eyebrow">Module 8 · Tools</div>
+    <h1 class="mod-title">Objection <em>Handling</em></h1>
+    <p class="mod-lead">Five objections you will hear in every subpoena response conversation. The goal is never to argue — it's to redirect to a question that surfaces the gap the buyer hasn't fully considered.</p>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="togglePanel(this)">
+        <span class="obj-badge">Objection</span>
+        <span class="obj-q">"We already have an eDiscovery platform."</span>
+        <span class="obj-chevron">▾</span>
+      </div>
+      <div class="obj-body">
+        <div class="obj-response">
+          <div class="or-label">Your Response</div>
+          <p>That's important, especially for collection, review, redaction, and production. The question is whether your process is controlled <em>before</em> discovery begins. How do subpoenas get captured, classified, routed, tracked, followed up on, and approved before documents are collected and produced?</p>
+        </div>
+        <div class="obj-followup">
+          <div class="ofu-label">Follow-Up Question</div>
+          <p>"Does your current platform give you a complete workflow record from receipt through production, or does the early-stage work still happen in email and spreadsheets?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="togglePanel(this)">
+        <span class="obj-badge">Objection</span>
+        <span class="obj-q">"We use outside counsel for subpoenas."</span>
+        <span class="obj-chevron">▾</span>
+      </div>
+      <div class="obj-body">
+        <div class="obj-response">
+          <div class="or-label">Your Response</div>
+          <p>Outside counsel can be essential for complex or high-risk matters. But many organizations are asking whether routine subpoena work can be handled more efficiently in-house. The opportunity is to reserve outside counsel for the matters that truly require legal strategy while giving the internal team better workflow control for repeatable requests.</p>
+        </div>
+        <div class="obj-followup">
+          <div class="ofu-label">Follow-Up Question</div>
+          <p>"Which subpoena types would you consider bringing in-house if the intake, routing, tracking, and review workflow were easier to manage?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="togglePanel(this)">
+        <span class="obj-badge">Objection</span>
+        <span class="obj-q">"Subpoenas aren't a big enough volume problem for us."</span>
+        <span class="obj-chevron">▾</span>
+      </div>
+      <div class="obj-body">
+        <div class="obj-response">
+          <div class="or-label">Your Response</div>
+          <p>Volume is one part of the business case, but risk and disruption also matter. Even occasional subpoenas can create fire drills if the process depends on manual intake, email follow-up, and unclear ownership. A single mishandled subpoena — privilege inadvertently waived, deadline missed, audit trail missing — carries significant organizational risk.</p>
+        </div>
+        <div class="obj-followup">
+          <div class="ofu-label">Follow-Up Question</div>
+          <p>"When subpoenas do arrive, do they follow a consistent workflow, or does the team have to recreate the process each time?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="togglePanel(this)">
+        <span class="obj-badge">Objection</span>
+        <span class="obj-q">"We already track subpoenas in spreadsheets."</span>
+        <span class="obj-chevron">▾</span>
+      </div>
+      <div class="obj-body">
+        <div class="obj-response">
+          <div class="or-label">Your Response</div>
+          <p>Spreadsheets can track basic information, but they don't manage workflow, automate follow-up, enforce approvals, connect to discovery activity, or create a complete defensible record of the response. They also tend to live with one person and become outdated the moment something changes.</p>
+        </div>
+        <div class="obj-followup">
+          <div class="ofu-label">Follow-Up Question</div>
+          <p>"If a response were challenged, would the spreadsheet show who did what, when they did it, what was reviewed, what was approved, and what was produced?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-hdr" onclick="togglePanel(this)">
+        <span class="obj-badge">Objection</span>
+        <span class="obj-q">"We're cautious about AI in legal workflows."</span>
+        <span class="obj-chevron">▾</span>
+      </div>
+      <div class="obj-body">
+        <div class="obj-response">
+          <div class="or-label">Your Response</div>
+          <p>That caution is appropriate — and it's the right instinct for legal workflows. Exterro's message is not unchecked automation. It's governed AI-assisted workflow, with human oversight where legal judgment matters. The AI handles the repetitive operational mechanics: capture, extraction, routing, follow-up. Attorneys and legal operations leaders remain in control of every decision that requires legal expertise.</p>
+        </div>
+        <div class="obj-followup">
+          <div class="ofu-label">Follow-Up Question</div>
+          <p>"Where would you be comfortable using AI to reduce repetitive work, and where would you require human review before action is taken?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 8 Complete</h4><p>You can handle every common objection with a redirect and a follow-up question.</p></div>
+      <button class="mc-btn" onclick="completeModule('m8')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M9: SALES PLAYS
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m9">
+    <div class="mod-eyebrow">Module 9 · Tools</div>
+    <h1 class="mod-title">Sales <em>Plays</em></h1>
+    <p class="mod-lead">Four targeted sales plays tied to specific buyer triggers. Each includes the pain, the message, and the one discovery question that opens the conversation.</p>
+
+    <div class="play-card">
+      <div class="play-top">
+        <div class="play-num">1</div>
+        <div class="play-title">Bring Routine Subpoenas In-House</div>
+        <div class="play-trigger-badge">🔔 Trigger: "We use outside counsel"</div>
+      </div>
+      <div class="play-body">
+        <div class="pb-section pain">
+          <h4>The Pain</h4>
+          <p>Outside counsel dependency creates cost, delay, and less direct process control for routine, repeatable subpoenas.</p>
+        </div>
+        <div class="pb-section message">
+          <h4>The Message</h4>
+          <p>Exterro helps legal teams bring more routine subpoena response work in-house with structured workflows, AI-assisted intake, and better visibility.</p>
+        </div>
+        <div class="pb-section question">
+          <h4>Discovery Question</h4>
+          <p>"Which subpoena types are routine enough that you'd prefer to manage them internally if the process were easier?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="play-card">
+      <div class="play-top">
+        <div class="play-num">2</div>
+        <div class="play-title">Replace Spreadsheet-Based Tracking</div>
+        <div class="play-trigger-badge">🔔 Trigger: "We use spreadsheets"</div>
+      </div>
+      <div class="play-body">
+        <div class="pb-section pain">
+          <h4>The Pain</h4>
+          <p>Manual tracking creates inconsistency, missed follow-up, poor reporting, and an audit trail that can't hold up to scrutiny.</p>
+        </div>
+        <div class="pb-section message">
+          <h4>The Message</h4>
+          <p>Exterro helps legal teams move from spreadsheet tracking to a governed workflow with structured records, routing, follow-up, and status visibility.</p>
+        </div>
+        <div class="pb-section question">
+          <h4>Discovery Question</h4>
+          <p>"What happens today when someone misses a follow-up or a deadline changes unexpectedly?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="play-card">
+      <div class="play-top">
+        <div class="play-num">3</div>
+        <div class="play-title">Connect Intake to Discovery</div>
+        <div class="play-trigger-badge">🔔 Trigger: Buyer has eDiscovery but intake is manual</div>
+      </div>
+      <div class="play-body">
+        <div class="pb-section pain">
+          <h4>The Pain</h4>
+          <p>The process is fragmented before collection begins. eDiscovery starts strong, but what feeds it is manual, inconsistent, and undocumented.</p>
+        </div>
+        <div class="pb-section message">
+          <h4>The Message</h4>
+          <p>Exterro helps legal teams connect the front end of subpoena response with downstream preservation, collection, review, and production — closing the gap that most platforms ignore.</p>
+        </div>
+        <div class="pb-section question">
+          <h4>Discovery Question</h4>
+          <p>"Where does the handoff happen between subpoena intake and document collection — and how is that handoff documented today?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="play-card">
+      <div class="play-top">
+        <div class="play-num">4</div>
+        <div class="play-title">Reduce Fire Drills</div>
+        <div class="play-trigger-badge">🔔 Trigger: "Subpoenas are disruptive"</div>
+      </div>
+      <div class="play-body">
+        <div class="pb-section pain">
+          <h4>The Pain</h4>
+          <p>Each subpoena interrupts planned work, requires manual coordination, and relies on individual heroics rather than repeatable process.</p>
+        </div>
+        <div class="pb-section message">
+          <h4>The Message</h4>
+          <p>Exterro helps turn subpoena response from a reactive fire drill into a repeatable legal operations workflow that runs consistently regardless of who receives the request.</p>
+        </div>
+        <div class="pb-section question">
+          <h4>Discovery Question</h4>
+          <p>"When a subpoena comes in, does your team follow a standard workflow or does the process vary depending on who receives it?"</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 9 Complete</h4><p>You can match the right sales play to any buyer trigger.</p></div>
+      <button class="mc-btn" onclick="completeModule('m9')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M10: TRAINING EXERCISES
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m10">
+    <div class="mod-eyebrow">Module 10 · Practice</div>
+    <h1 class="mod-title">Training <em>Exercises</em></h1>
+    <p class="mod-lead">Three exercises to practice before your next subpoena response conversation. Write your answer, then reveal the suggested response. There are no wrong answers — the goal is to practice the thinking, not memorize a script.</p>
+
+    <div class="exercise-card">
+      <div class="ex-hdr">
+        <span class="ex-badge">Exercise 1</span>
+        <span class="ex-title">Identify the Gap</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-question">The buyer says: "We already use an eDiscovery platform for subpoenas."</div>
+        <div class="ex-context">Write three follow-up questions that determine whether the buyer has a complete subpoena workflow or only a downstream discovery tool.</div>
+        <textarea class="ex-textarea" placeholder="Write your three follow-up questions here..."></textarea>
+        <div class="ex-actions">
+          <button class="ex-btn reveal" onclick="revealAnswer('ex1')">Reveal Suggested Answer</button>
+          <button class="ex-btn clear" onclick="clearExercise(this)">Clear</button>
+        </div>
+        <div class="ex-answer" id="ex1">
+          <div class="ea-label">Suggested Responses</div>
+          <ul>
+            <li>How do subpoenas get captured and classified <em>before</em> documents are collected? Is there a system for that, or does it happen manually?</li>
+            <li>How are deadlines, assignments, and follow-up tasks tracked across HR, claims, and other departments?</li>
+            <li>Can you see the full process — from receipt through production — in one place, or is the early-stage work still in email and spreadsheets?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card">
+      <div class="ex-hdr">
+        <span class="ex-badge">Exercise 2</span>
+        <span class="ex-title">Reframe the Pitch</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-question">Convert this feature-based pitch into a business-value pitch.</div>
+        <div class="ex-context">"Our system uses AI to extract subpoena metadata and route requests automatically."</div>
+        <textarea class="ex-textarea" placeholder="Write your reframed value pitch here..."></textarea>
+        <div class="ex-actions">
+          <button class="ex-btn reveal" onclick="revealAnswer('ex2')">Reveal Suggested Answer</button>
+          <button class="ex-btn clear" onclick="clearExercise(this)">Clear</button>
+        </div>
+        <div class="ex-answer" id="ex2">
+          <div class="ea-label">Suggested Response</div>
+          <ul>
+            <li>Subpoena Manager helps legal teams reduce manual intake and routing work by turning each subpoena into a structured, trackable workflow from the instant of receipt — so teams can respond faster while maintaining visibility and control.</li>
+            <li>The AI handles the mechanics: reading, extracting, routing, and triggering follow-up. Your team stays in control of the decisions that require legal judgment.</li>
+            <li>The result: fewer hours lost to clerical work, a more consistent process, and a defensible audit trail — without adding headcount.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card">
+      <div class="ex-hdr">
+        <span class="ex-badge">Exercise 3</span>
+        <span class="ex-title">Handle the Outside Counsel Objection</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-question">The buyer says: "We just send subpoenas to outside counsel."</div>
+        <div class="ex-context">Write a response that acknowledges their position, then opens a door to the in-house conversation without being dismissive or pushy.</div>
+        <textarea class="ex-textarea" placeholder="Write your response here..."></textarea>
+        <div class="ex-actions">
+          <button class="ex-btn reveal" onclick="revealAnswer('ex3')">Reveal Suggested Answer</button>
+          <button class="ex-btn clear" onclick="clearExercise(this)">Clear</button>
+        </div>
+        <div class="ex-answer" id="ex3">
+          <div class="ea-label">Suggested Response</div>
+          <ul>
+            <li>Start by acknowledging: "That makes complete sense for complex or high-risk matters — outside counsel can be essential there."</li>
+            <li>Then pivot: "What we're seeing more of is legal teams asking whether routine subpoena work can be handled internally with better process support — not because they want to cut outside counsel entirely, but because they want to reserve them for the matters that truly need legal strategy."</li>
+            <li>Then ask: "Which subpoena types do you send out because they truly require outside legal strategy, and which ones go out because the internal process is too manual to manage efficiently?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><h2>Manager Coaching Notes</h2></div>
+    <div class="info-card purple">
+      <h3>Coaching Prompt for Practice Calls</h3>
+      <p>"Your buyer says they already have an eDiscovery platform. Your job is not to argue. Your job is to find out whether they have a complete subpoena response workflow from receipt through production."</p>
+      <ul style="margin-top:12px">
+        <li><strong>Strong reps acknowledge</strong> the value of existing eDiscovery tools</li>
+        <li><strong>Strong reps ask</strong> about the pre-discovery workflow</li>
+        <li><strong>Strong reps uncover</strong> manual intake, routing, follow-up, and reporting gaps</li>
+        <li><strong>Strong reps connect</strong> those gaps to cost, delay, risk, and defensibility</li>
+        <li><strong>Strong reps position</strong> Exterro as complementary to the buyer's goal — not a replacement</li>
+      </ul>
+    </div>
+
+    <div class="mod-complete">
+      <div class="mc-check">✓</div>
+      <div class="mc-text"><h4>Module 10 Complete</h4><p>You've practiced the three core skills: gap identification, reframing, and objection handling.</p></div>
+      <button class="mc-btn" onclick="completeModule('m10')">Mark Complete</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       M11: QUICK REFERENCE
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div class="module" id="mod-m11">
+    <div class="mod-eyebrow">Module 11 · Practice</div>
+    <h1 class="mod-title">Quick Reference <em>Cheat Sheet</em></h1>
+    <p class="mod-lead">Everything you need in one place — before a call, during prep, or as a fast refresher. Use the approved lines by clicking to copy.</p>
+
+    <div class="cheat-grid">
+      <div class="ch-card">
+        <div class="ch-hdr orange">🎯 What the Buyer Likely Believes</div>
+        <div class="ch-body">
+          <p style="font-size:13.5px;color:var(--charcoal);font-style:italic;line-height:1.7">"We need to respond quickly and cost effectively, but we cannot risk producing the wrong information or losing control of sensitive data."</p>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-hdr purple">👂 What to Listen For</div>
+        <div class="ch-body">
+          <ul>
+            <li>"Spreadsheets" or "tracking in Excel"</li>
+            <li>"Email follow-up" or "manual reminders"</li>
+            <li>"Outside counsel handles it"</li>
+            <li>"HR has to pull records"</li>
+            <li>"We have to chase people"</li>
+            <li>"We don't have great reporting"</li>
+            <li>"Deadlines are hard to track"</li>
+            <li>"We use eDiscovery once documents are collected"</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-hdr green">✅ Do This</div>
+        <div class="ch-body">
+          <ul>
+            <li>Use subpoena response as a cost, risk, and workflow modernization conversation</li>
+            <li>Emphasize that the problem starts before eDiscovery review</li>
+            <li>Ask about intake, routing, deadlines, and auditability</li>
+            <li>Keep human oversight central to every message</li>
+            <li>Position Exterro around full lifecycle control</li>
+            <li>Use cost, speed, consistency, and defensibility together</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-hdr blue">❌ Don't Do This</div>
+        <div class="ch-body">
+          <ul>
+            <li>Don't claim Exterro eliminates the need for outside counsel</li>
+            <li>Don't suggest AI makes legal decisions</li>
+            <li>Don't reduce the conversation to document review alone</li>
+            <li>Don't use unsupported performance claims</li>
+            <li>Don't position subpoena response as just administrative intake</li>
+            <li>Don't skip the early-stage process questions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-closing" style="margin-bottom:24px">
+      <div class="cl-label">What to Say When They Push Back on eDiscovery</div>
+      <p>"Your eDiscovery process may be strong once documents are collected. The opportunity is to bring the same level of structure and control to everything that happens before that — starting from the instant the subpoena is received."</p>
+    </div>
+
+    <div class="sec-hdr"><h2>Approved Sales Lines</h2><p>Click any line to copy it to your clipboard</p></div>
+
+    <div class="quote-list">
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>A subpoena response problem does not begin at document review. It begins the instant the subpoena is received.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>Modern eDiscovery helps manage documents. Exterro helps manage the subpoena response workflow.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>The goal is not just to respond faster. The goal is to respond faster with control, visibility, and defensibility.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>Routine subpoenas should not have to become expensive outside counsel projects by default.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>Subpoena Manager helps legal teams move from ad hoc tracking to structured response management.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>AI can help reduce repetitive intake and routing work, but legal teams remain in control of every decision that requires judgment.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>From the instant of receipt, legal teams need to know what was requested, who owns the response, what deadlines apply, and what actions are underway.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+      <div class="quote-item" onclick="copyLine(this)">
+        <p>Human oversight remains essential where legal judgment matters — Subpoena Manager is built around that principle.</p>
+        <div class="copy-confirm">✓ Copied to clipboard</div>
+      </div>
+    </div>
+
+    <div class="mod-complete" style="background:linear-gradient(135deg,var(--orange-lt),var(--purple-lt));border-color:var(--orange)">
+      <div class="mc-check" style="background:var(--orange)">🎉</div>
+      <div class="mc-text"><h4 style="color:var(--orange)">Guide Complete!</h4><p>You've finished all 11 modules. You're ready for subpoena response conversations.</p></div>
+      <button class="mc-btn" onclick="completeModule('m11')">Finish</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   MODULE ORDER & STATE
+═══════════════════════════════════════════════════════════════════════════ */
+const moduleOrder = ['welcome','m1','m2','m3','m4','m5','m6','m7','m8','m9','m10','m11'];
+const moduleNames = {
+  welcome:'Overview',m1:'Market Context',m2:'The Big Opportunity',m3:'Positioning',
+  m4:'Buyer Pain Points',m5:'Persona Messaging',m6:'Discovery Questions',
+  m7:'Talk Tracks',m8:'Objection Handling',m9:'Sales Plays',
+  m10:'Training Exercises',m11:'Quick Reference'
+};
+let currentMod = 'welcome';
+let completed = new Set();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════════════════════ */
+function showModule(id, el) {
+  // Hide all modules
+  document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+  // Show target
+  const target = document.getElementById('mod-' + id);
+  if (target) {
+    target.classList.add('active');
+    target.scrollIntoView ? window.scrollTo(0,0) : null;
+  }
+  // Update sidebar
+  document.querySelectorAll('.sb-item').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else {
+    const navEl = document.querySelector(`[data-mod="${id}"]`);
+    if (navEl) navEl.classList.add('active');
+  }
+  currentMod = id;
+  document.getElementById('tb-current').textContent = moduleNames[id] || id;
+  window.scrollTo(0,0);
+}
+
+function nextModule() {
+  const idx = moduleOrder.indexOf(currentMod);
+  if (idx < moduleOrder.length - 1) {
+    const next = moduleOrder[idx + 1];
+    showModule(next, document.querySelector(`[data-mod="${next}"]`));
+  }
+}
+
+function prevModule() {
+  const idx = moduleOrder.indexOf(currentMod);
+  if (idx > 0) {
+    const prev = moduleOrder[idx - 1];
+    showModule(prev, document.querySelector(`[data-mod="${prev}"]`));
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPLETION
+═══════════════════════════════════════════════════════════════════════════ */
+function completeModule(id) {
+  completed.add(id);
+  const navEl = document.querySelector(`[data-mod="${id}"]`);
+  if (navEl) navEl.classList.add('done');
+
+  const btn = document.querySelector(`#mod-${id} .mc-btn`);
+  if (btn) {
+    btn.textContent = '✓ Completed';
+    btn.classList.add('done-btn');
+  }
+
+  updateProgress();
+  showToast('Module marked complete! ✓');
+
+  // Auto-advance after brief delay
+  setTimeout(() => nextModule(), 600);
+}
+
+function updateProgress() {
+  const total = moduleOrder.filter(m => m !== 'welcome').length;
+  const done = completed.size;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EXPANDABLE PANELS
+═══════════════════════════════════════════════════════════════════════════ */
+function togglePanel(hdr) {
+  const body = hdr.nextElementSibling;
+  const isOpen = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !isOpen);
+  if (body) body.classList.toggle('open', !isOpen);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PERSONA TABS
+═══════════════════════════════════════════════════════════════════════════ */
+function showPersona(id, el) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.persona-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  const panel = document.getElementById('persona-' + id);
+  if (panel) panel.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EXERCISES
+═══════════════════════════════════════════════════════════════════════════ */
+function revealAnswer(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('show');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function clearExercise(btn) {
+  const card = btn.closest('.ex-body');
+  if (!card) return;
+  const ta = card.querySelector('.ex-textarea');
+  if (ta) ta.value = '';
+  const ans = card.querySelector('.ex-answer');
+  if (ans) ans.classList.remove('show');
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COPY FUNCTIONS
+═══════════════════════════════════════════════════════════════════════════ */
+function copyLine(el) {
+  const text = el.querySelector('p').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const confirm = el.querySelector('.copy-confirm');
+    if (confirm) { confirm.style.display = 'block'; setTimeout(() => confirm.style.display = 'none', 2000); }
+    showToast('Line copied to clipboard');
+  });
+}
+
+function copyQ(el) {
+  navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+    showToast('Question copied to clipboard');
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KEYBOARD NAV
+═══════════════════════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextModule();
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevModule();
+});
+</script>
+</body>
+</html>
