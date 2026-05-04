@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exterro Subpoena Manager | Partner Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #F26C38;
+    --orange-light: rgba(242,108,56,0.12);
+    --orange-mid: rgba(242,108,56,0.22);
+    --purple-dark: #3a2155;
+    --purple: #4B2D6E;
+    --purple-mid: #5c3a85;
+    --charcoal: #323132;
+    --silver: #6D6E70;
+    --light-gray: #F1F1F2;
+    --white: #ffffff;
+    --green: #27ae60;
+    --blue: #64adc6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #fff;
+    color: var(--charcoal);
+    width: 1020px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 55%, var(--purple-mid) 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    min-height: 210px;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(242,108,56,0.18) 0%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    left: 30%; bottom: -80px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(100,173,198,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .header-left {
+    padding: 36px 44px 36px 44px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .wordmark {
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .wordmark .x { color: var(--orange); }
+  .wordmark sup { font-size: 11px; vertical-align: super; }
+
+  .product-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 20px;
+  }
+
+  .header-eyebrow {
+    display: inline-block;
+    background: var(--orange);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    width: fit-content;
+  }
+
+  .header-h1 {
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.18;
+    margin-bottom: 10px;
+  }
+  .header-h1 .accent { color: var(--orange); }
+
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.65;
+    max-width: 480px;
+  }
+
+  .header-right {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 36px 32px 24px;
+    border-left: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stat-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .stat-num {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--orange);
+    line-height: 1;
+    min-width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .stat-text {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+  .stat-text strong { color: #fff; font-weight: 700; display: block; margin-bottom: 1px; }
+
+  .stat-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* ── BODY ── */
+  .body {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  /* ── SECTION ── */
+  .sec {
+    padding: 28px 30px;
+    border-right: 1px solid var(--light-gray);
+    border-bottom: 1px solid var(--light-gray);
+  }
+  .sec:last-child { border-right: none; }
+
+  .sec-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .sec-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(242,108,56,0.25);
+  }
+
+  .sec h2 {
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--charcoal);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .sec p {
+    font-size: 12.5px;
+    color: var(--silver);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  /* ── PROBLEM SECTION ── */
+  .problem-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .problem-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 12px;
+    color: var(--charcoal);
+    line-height: 1.5;
+    padding: 7px 10px;
+    background: var(--light-gray);
+    border-radius: 5px;
+    border-left: 3px solid rgba(231,76,60,0.4);
+  }
+  .problem-item .pi { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── HOW IT WORKS ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--light-gray);
+    position: relative;
+  }
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--purple);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-content {}
+  .step-content strong {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--charcoal);
+    display: block;
+    margin-bottom: 1px;
+  }
+  .step-content span {
+    font-size: 11.5px;
+    color: var(--silver);
+    line-height: 1.45;
+  }
+
+  /* ── WIDE MIDDLE ROW ── */
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--light-gray);
+  }
+
+  /* ── AUDIENCE ── */
+  .audience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .audience-card {
+    background: var(--light-gray);
+    border-radius: 6px;
+    padding: 10px 12px;
+    border-top: 2px solid var(--purple);
+  }
+  .audience-card .role {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+  .audience-card .value-msg {
+    font-size: 11px;
+    color: var(--charcoal);
+    line-height: 1.45;
+  }
+
+  /* ── WIN ANGLES ── */
+  .win-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .win-item {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+  .win-item .wcheck {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(39,174,96,0.15);
+    border: 1.5px solid var(--green);
+    color: var(--green);
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-weight: 700;
+  }
+
+  /* ── DISCOVERY QUESTIONS ── */
+  .dq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .dq-item {
+    font-size: 12px;
+    color: var(--charcoal);
+    line-height: 1.5;
+    padding-left: 12px;
+    border-left: 2px solid var(--orange);
+    font-style: italic;
+  }
+
+  /* ── BOUNDARY SECTION ── */
+  .boundary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .boundary-col {}
+  .boundary-col .bc-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+  }
+  .bc-does .bc-label { color: var(--green); border-color: var(--green); }
+  .bc-doesnt .bc-label { color: #e74c3c; border-color: #e74c3c; }
+
+  .boundary-col ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .boundary-col li {
+    font-size: 11.5px;
+    color: var(--charcoal);
+    line-height: 1.45;
+    padding-left: 14px;
+    position: relative;
+  }
+  .bc-does li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; font-size: 10px; }
+  .bc-doesnt li::before { content: '✗'; position: absolute; left: 0; color: #e74c3c; font-weight: 700; font-size: 10px; }
+
+  /* ── BOTTOM FULL-WIDTH STRIP ── */
+  .bottom-strip {
+    background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+    padding: 20px 44px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .bottom-message {}
+  .bottom-message .bm-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .bottom-message p {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    max-width: 580px;
+  }
+  .bottom-message p strong { color: #fff; }
+
+  .bottom-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .cta-btn {
+    background: var(--orange);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .cta-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+  }
+
+  /* ── PARTNER BADGE ── */
+  .partner-badge {
+    background: var(--orange-mid);
+    border: 1px solid rgba(242,108,56,0.35);
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    width: fit-content;
+    margin-bottom: 6px;
+  }
+
+  /* ── QUOTE BLOCK ── */
+  .quote-block {
+    background: rgba(242,108,56,0.07);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 5px 5px 0;
+    padding: 12px 14px;
+    margin-top: 2px;
+  }
+  .quote-block p {
+    font-size: 12px;
+    color: var(--charcoal);
+    line-height: 1.6;
+    font-style: italic;
+    margin: 0;
+  }
+  .quote-block .qsource {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--orange);
+    font-style: normal;
+    margin-top: 6px;
+  }
+
+  /* ── AGENTMODE BRIDGE ── */
+  .bridge-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(75,45,110,0.08);
+    border: 1px solid rgba(75,45,110,0.2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 14px;
+  }
+  .bridge-pill .bp-icon { font-size: 18px; flex-shrink: 0; }
+  .bridge-pill .bp-text { font-size: 11.5px; color: var(--charcoal); line-height: 1.5; }
+  .bridge-pill .bp-text strong { color: var(--purple); }
+
+  /* ── CONFIDENTIAL FOOTER ── */
+  .conf-footer {
+    background: var(--charcoal);
+    padding: 8px 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .conf-footer span {
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.5px;
+  }
+  .conf-footer .dot { color: rgba(255,255,255,0.15); }
+
+  @media print {
+    body { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-left">
+    <div class="wordmark">e<span class="x">x</span>terro<sup>®</sup></div>
+    <div class="product-label">Subpoena Manager</div>
+    <div class="partner-badge">Partner Overview</div>
+    <div class="header-eyebrow">Governed Autonomous AI · Legal Operations</div>
+    <h1 class="header-h1">Replace Manual Subpoena<br>Coordination with <span class="accent">Controlled Execution</span></h1>
+    <p class="header-sub">Exterro Subpoena Manager is the first live expression of governed autonomous AI for legal operations — capturing requests, extracting key details, routing work, and triggering follow-up while preserving human oversight where legal judgment matters.</p>
+  </div>
+  <div class="header-right">
+    <div class="stat-block">
+      <div class="stat">
+        <div class="stat-num">90 min</div>
+        <div class="stat-text"><strong>Per subpoena, manual</strong>Reading, entering, triaging, and coordinating each request by hand</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num">5 min</div>
+        <div class="stat-text"><strong>With Subpoena Manager</strong>Governed autonomous AI compresses the same process to as little as 5 minutes</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num">~1 wk</div>
+        <div class="stat-text"><strong>Recovered monthly</strong>At ~20 subpoenas/month — nearly a full work week returned from clerical mechanics</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ROW 1: PROBLEM · HOW IT WORKS · AUDIENCE ══ -->
+<div class="body">
+
+  <!-- Problem -->
+  <div class="sec">
+    <div class="sec-label">The Problem</div>
+    <h2>Subpoena Response Is Still Broken</h2>
+    <p>Most legal teams manage subpoenas through a patchwork of shared inboxes, spreadsheets, PDFs, and manual follow-up. It creates clerical drag, inconsistent execution, and avoidable risk.</p>
+    <div class="problem-grid">
+      <div class="problem-item"><span class="pi">📥</span>Requests arrive through fragmented channels — email, mail, portals — with no structured intake</div>
+      <div class="problem-item"><span class="pi">⏱️</span>Teams spend 1–1.5 hours per subpoena just entering information into disconnected systems</div>
+      <div class="problem-item"><span class="pi">🔀</span>Ownership is unclear, routing is inconsistent, and follow-up depends on individual memory</div>
+      <div class="problem-item"><span class="pi">🔍</span>No audit trail — demonstrating a defensible process to regulators requires piecing together email threads</div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="sec">
+    <div class="sec-label">How It Works</div>
+    <h2>One Controlled Workflow from Receipt to Response</h2>
+    <p>Subpoena Manager governs the operational mechanics of subpoena response — without replacing legal judgment.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Capture Requests Instantly</strong>
+          <span>Ingests subpoenas from email, mail, and portals — no manual intake steps required</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Extract Critical Details</strong>
+          <span>AI identifies deadlines, parties, request types, and key metadata automatically</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Create Structured Records</strong>
+          <span>Replaces duplicate entry across disconnected systems with one controlled record</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Route Work with Clarity</strong>
+          <span>Assigns ownership and next steps consistently — no ambiguity about who handles what</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>Trigger Cross-Dept Follow-Up</strong>
+          <span>Coordinates with HR, Claims, and Compliance automatically — without manual reminders</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <strong>Preserve Human Review Gates</strong>
+          <span>Attorneys and legal ops leaders approve all legal decisions — the AI handles the mechanics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audience -->
+  <div class="sec" style="border-right:none;">
+    <div class="sec-label">Who Buys This</div>
+    <h2>Built for Enterprise Legal Operations</h2>
+    <p>ICP: Mid-size to large enterprises managing recurring subpoena and legal request volumes across disconnected systems.</p>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="role">General Counsel / Deputy GC</div>
+        <div class="value-msg">Defensibility, visibility, and attorneys focused on judgment — not clerical work</div>
+      </div>
+      <div class="audience-card">
+        <div class="role">Head of Legal Operations</div>
+        <div class="value-msg">A workflow that's easier to manage, measure, and scale without adding headcount</div>
+      </div>
+      <div class="audience-card">
+        <div class="role">Paralegal / Coordinator</div>
+        <div class="value-msg">Less typing, tracking, and chasing — more time on work that requires judgment</div>
+      </div>
+      <div class="audience-card">
+        <div class="role">eDiscovery / Lit Support</div>
+        <div class="value-msg">Cleaner handoffs into legal hold, collection, review, and production</div>
+      </div>
+    </div>
+    <div class="bridge-pill">
+      <span class="bp-icon">🔗</span>
+      <div class="bp-text"><strong>Strategic Bridge:</strong> AgentMode will soon extend this model by turning plain-language legal intent into structured work, reports, and actions across Exterro's privacy-first platform.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ ROW 2: BOUNDARY · WIN ANGLES / DISCOVERY QS ══ -->
+<div class="row-2">
+
+  <!-- Boundary: What it does vs. doesn't -->
+  <div class="sec" style="border-bottom:none; border-right:1px solid var(--light-gray);">
+    <div class="sec-label">Human Oversight</div>
+    <h2>Speed Without Loss of Control</h2>
+    <p>This is not AI that replaces attorneys. It handles operational mechanics while keeping legal judgment exactly where it belongs.</p>
+    <div class="boundary-grid">
+      <div class="boundary-col bc-does">
+        <div class="bc-label">AI Handles</div>
+        <ul>
+          <li>Capturing and classifying requests</li>
+          <li>Extracting deadlines and metadata</li>
+          <li>Routing work to the right owner</li>
+          <li>Triggering cross-dept follow-up</li>
+          <li>Status tracking and visibility</li>
+          <li>Building the audit trail</li>
+        </ul>
+      </div>
+      <div class="boundary-col bc-doesnt">
+        <div class="bc-label">Attorneys Control</div>
+        <ul>
+          <li>Approvals and scope decisions</li>
+          <li>Privilege and responsiveness calls</li>
+          <li>Collection authorization</li>
+          <li>Production decisions</li>
+          <li>Exception handling</li>
+          <li>Final response sign-off</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:14px;">
+      <p>"Most legal teams are not slowed by legal judgment. They are slowed by mechanics: reading requests, retyping information, figuring out ownership, chasing departments, and building reports by hand."</p>
+      <div class="qsource">Exterro Executive Briefing</div>
+    </div>
+  </div>
+
+  <!-- Right side: Win Angles + Discovery Qs stacked -->
+  <div style="display:grid; grid-template-rows: auto auto; border-bottom:none;">
+
+    <!-- Win Angles -->
+    <div class="sec" style="border-right:none; border-bottom:1px solid var(--light-gray);">
+      <div class="sec-label">Partner Win Angles</div>
+      <h2>Where Exterro Wins</h2>
+      <div class="win-list">
+        <div class="win-item"><span class="wcheck">✓</span><span><strong>vs. Manual / Spreadsheets:</strong> ROI math closes fast — 90 min to 5 min; nearly a work week recovered monthly</span></div>
+        <div class="win-item"><span class="wcheck">✓</span><span><strong>vs. ServiceNow / Generic Workflow:</strong> Legal-specific AI extraction, no IT dependency, legal ops owns the workflow</span></div>
+        <div class="win-item"><span class="wcheck">✓</span><span><strong>vs. Point Intake Tools:</strong> Subpoena Manager governs the full process — not just intake. Routing, follow-up, production, and audit trail included</span></div>
+        <div class="win-item"><span class="wcheck">✓</span><span><strong>vs. Build In-House:</strong> Legal-tuned AI that IT can't replicate; faster time-to-value; no maintenance burden</span></div>
+        <div class="win-item"><span class="wcheck">✓</span><span><strong>Exterro platform customers:</strong> Structured intake creates cleaner handoffs into legal hold, collection, review, and production already in use</span></div>
+      </div>
+    </div>
+
+    <!-- Discovery Questions -->
+    <div class="sec" style="border-right:none; border-bottom:none;">
+      <div class="sec-label">Discovery Questions</div>
+      <h2>Qualify the Opportunity</h2>
+      <div class="dq-list">
+        <div class="dq-item">"How are subpoenas received, tracked, and routed today — and how much of that is still manual?"</div>
+        <div class="dq-item">"Where do delays happen: incomplete requests, misrouting, duplicate entry, or stakeholder follow-through?"</div>
+        <div class="dq-item">"If a regulator asked you to demonstrate your process for a specific subpoena from six months ago — how long would that take?"</div>
+        <div class="dq-item">"If the person who manages subpoena tracking left tomorrow — would the process continue to run the same way?"</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ BOTTOM STRIP ══ -->
+<div class="bottom-strip">
+  <div class="bottom-message">
+    <div class="bm-label">Partner Positioning</div>
+    <p><strong>Other vendors automate pieces of subpoena response. Exterro governs the subpoena response process.</strong> Connect Subpoena Manager to your customers' broader legal operations strategy — from intake through production — and use it as the entry point to Exterro's full platform for legal hold, collection, review, and eDiscovery.</p>
+  </div>
+  <div class="bottom-cta">
+    <a class="cta-btn" href="#">Request a Demo</a>
+    <div class="cta-sub">Partner portal: partners.exterro.com</div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="conf-footer">
+  <span>© 2026 Exterro, Inc. All rights reserved.</span>
+  <span class="dot">·</span>
+  <span>Partner Confidential — Not for Distribution</span>
+  <span class="dot">·</span>
+  <span>exterro.com</span>
+</div>
+
+</body>
+</html>
