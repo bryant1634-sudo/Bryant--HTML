@@ -1,0 +1,428 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body-wrapper {
+    display: block;
+    background: var(--color-background-secondary);
+    padding: 24px;
+  }
+
+  .print-hint {
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .print-btn {
+    background: #8B0000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .print-btn:hover { background: #6B0000; }
+
+  .cover-wrapper {
+    width: 816px;
+    height: 1056px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: #0a1628;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+  }
+
+  .bg-flag {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(180deg, 
+        #B22234 0%, #B22234 7.69%, 
+        #fff 7.69%, #fff 15.38%, 
+        #B22234 15.38%, #B22234 23.07%, 
+        #fff 23.07%, #fff 30.76%, 
+        #B22234 30.76%, #B22234 38.45%, 
+        #fff 38.45%, #fff 46.15%, 
+        #B22234 46.15%, #B22234 53.84%,
+        #fff 53.84%, #fff 61.53%,
+        #B22234 61.53%, #B22234 69.23%,
+        #fff 69.23%, #fff 76.92%,
+        #B22234 76.92%, #B22234 84.61%,
+        #fff 84.61%, #fff 92.3%,
+        #B22234 92.3%, #B22234 100%
+      );
+    opacity: 0.18;
+  }
+
+  .bg-canton {
+    position: absolute;
+    top: 0; left: 0;
+    width: 330px; height: 404px;
+    background: #3C3B6E;
+    opacity: 0.18;
+  }
+
+  .bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(10,22,40,0.55) 0%, rgba(10,22,40,0.92) 100%);
+  }
+
+  .gold-border-outer {
+    position: absolute;
+    inset: 16px;
+    border: 3px solid #C9A84C;
+    pointer-events: none;
+  }
+  .gold-border-inner {
+    position: absolute;
+    inset: 22px;
+    border: 1px solid #C9A84C;
+    pointer-events: none;
+  }
+
+  .corner-ornament {
+    position: absolute;
+    width: 32px; height: 32px;
+    pointer-events: none;
+  }
+  .corner-ornament svg { width: 32px; height: 32px; }
+  .co-tl { top: 10px; left: 10px; }
+  .co-tr { top: 10px; right: 10px; transform: scaleX(-1); }
+  .co-bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+  .co-br { bottom: 10px; right: 10px; transform: scale(-1,-1); }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 52px 60px 48px;
+  }
+
+  .top-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .troop-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    color: #C9A84C;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  .logos-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    margin-bottom: 28px;
+  }
+
+  .logo-img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.7));
+  }
+
+  .logo-img-lg {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.7));
+  }
+
+  .gold-divider {
+    width: 520px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #C9A84C 20%, #FFD700 50%, #C9A84C 80%, transparent);
+    margin: 18px 0;
+    flex-shrink: 0;
+  }
+
+  .thin-divider {
+    width: 400px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #C9A84C 30%, #C9A84C 70%, transparent);
+    margin: 12px 0;
+    flex-shrink: 0;
+  }
+
+  .eagle-scout-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 68px;
+    line-height: 1.0;
+    text-align: center;
+    letter-spacing: 0.06em;
+    background: linear-gradient(180deg, #FFD700 0%, #C9A84C 50%, #A87B2A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    margin: 4px 0;
+  }
+
+  .advancement-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #fff;
+    text-transform: uppercase;
+    opacity: 0.88;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .workbook-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: #C9A84C;
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin-bottom: 0;
+    opacity: 0.85;
+  }
+
+  .middle-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .rank-badges-img {
+    width: 420px;
+    object-fit: contain;
+    opacity: 0.92;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.8));
+    margin: 12px 0 20px;
+  }
+
+  .scout-law-ring {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 16px rgba(0,0,0,0.8));
+    margin-bottom: 16px;
+  }
+
+  .info-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 6px;
+    padding: 28px 48px;
+    width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .info-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .info-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: #C9A84C;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .info-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(201,168,76,0.6);
+    color: #fff;
+    font-family: 'EB Garamond', serif;
+    font-size: 26px;
+    text-align: center;
+    width: 100%;
+    outline: none;
+    padding: 4px 0;
+    transition: border-color 0.2s;
+  }
+  .info-input::placeholder { color: rgba(255,255,255,0.3); font-style: italic; }
+  .info-input:focus { border-bottom-color: #FFD700; }
+
+  .bottom-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .location-text {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: #C9A84C;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 6px;
+    opacity: 0.9;
+  }
+
+  .be-prepared {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.12em;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  @media print {
+    body-wrapper { padding: 0; background: white; }
+    .print-hint, .print-btn { display: none !important; }
+    .cover-wrapper {
+      width: 8.5in;
+      height: 11in;
+      box-shadow: none;
+      border: none;
+      margin: 0;
+      page-break-after: avoid;
+    }
+    @page { size: 8.5in 11in; margin: 0; }
+  }
+</style>
+
+<div style="background: var(--color-background-secondary); padding: 20px; display: flex; flex-direction: column; align-items: center;">
+  <h2 class="sr-only">Eagle Scout Advancement Workbook Binder Cover for Troop 16, Kansas City, MO</h2>
+
+  <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+    <button class="print-btn" onclick="window.print()">
+      <i class="ti ti-printer" aria-hidden="true"></i> Print / Save as PDF
+    </button>
+  </div>
+  <p class="print-hint" style="color:var(--color-text-secondary); font-size:12px; margin-bottom:16px;">
+    Fill in your name and date, then print. Use "Save as PDF" for a digital copy.
+  </p>
+
+  <div class="cover-wrapper" id="cover">
+    <div class="bg-flag"></div>
+    <div class="bg-canton"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="gold-border-outer"></div>
+    <div class="gold-border-inner"></div>
+
+    <div class="co-tl corner-ornament">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L16 2 L16 5 L5 5 L5 16 L2 16 Z" fill="#C9A84C"/>
+        <path d="M2 2 L8 8" stroke="#C9A84C" stroke-width="0.8"/>
+        <circle cx="2" cy="2" r="2" fill="#C9A84C"/>
+        <circle cx="16" cy="2" r="1.5" fill="#C9A84C" opacity="0.6"/>
+        <circle cx="2" cy="16" r="1.5" fill="#C9A84C" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="co-tr corner-ornament">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L16 2 L16 5 L5 5 L5 16 L2 16 Z" fill="#C9A84C"/>
+        <circle cx="2" cy="2" r="2" fill="#C9A84C"/>
+        <circle cx="16" cy="2" r="1.5" fill="#C9A84C" opacity="0.6"/>
+        <circle cx="2" cy="16" r="1.5" fill="#C9A84C" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="co-bl corner-ornament">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L16 2 L16 5 L5 5 L5 16 L2 16 Z" fill="#C9A84C"/>
+        <circle cx="2" cy="2" r="2" fill="#C9A84C"/>
+        <circle cx="16" cy="2" r="1.5" fill="#C9A84C" opacity="0.6"/>
+        <circle cx="2" cy="16" r="1.5" fill="#C9A84C" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="co-br corner-ornament">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L16 2 L16 5 L5 5 L5 16 L2 16 Z" fill="#C9A84C"/>
+        <circle cx="2" cy="2" r="2" fill="#C9A84C"/>
+        <circle cx="16" cy="2" r="1.5" fill="#C9A84C" opacity="0.6"/>
+        <circle cx="2" cy="16" r="1.5" fill="#C9A84C" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <div class="content">
+      <div class="top-section">
+        <div class="troop-badge">Troop 16 &nbsp;·&nbsp; Kansas City, Missouri</div>
+
+        <div class="logos-row">
+          <img class="logo-img" src="/mnt/user-data/uploads/images__1_.jpg" alt="BSA Scout Law Medallion" onerror="this.style.display='none'">
+          <img class="logo-img-lg" src="/mnt/user-data/uploads/images.png" alt="Eagle Scout Scouting America Logo" onerror="this.style.display='none'">
+          <img class="logo-img" src="/mnt/user-data/uploads/images__1_.png" alt="BSA Fleur-de-lis Logo" onerror="this.style.display='none'">
+        </div>
+
+        <div class="gold-divider"></div>
+
+        <div class="eagle-scout-title">Eagle Scout</div>
+        <div class="advancement-subtitle">Advancement</div>
+        <div class="workbook-label">Rank Requirement Workbook</div>
+
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="middle-section">
+        <img class="rank-badges-img" src="/mnt/user-data/uploads/images__2_.jpg" alt="Scout rank badge progression" onerror="this.style.display='none'">
+
+        <div class="thin-divider"></div>
+
+        <div class="info-box">
+          <div class="info-row">
+            <span class="info-label">Scout's Name</span>
+            <input class="info-input" type="text" placeholder="Enter name here" id="scout-name" spellcheck="false">
+          </div>
+          <div class="info-row">
+            <span class="info-label">Date</span>
+            <input class="info-input" type="text" placeholder="Month Day, Year" id="scout-date" spellcheck="false">
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-section">
+        <div class="thin-divider"></div>
+        <div class="location-text">Scouting America &nbsp;·&nbsp; Be Prepared</div>
+        <div class="be-prepared">On my honor, I will do my best...</div>
+      </div>
+    </div>
+  </div>
+</div>
